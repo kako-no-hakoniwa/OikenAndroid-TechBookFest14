@@ -1,0 +1,3 @@
+[submodule "prh-rules"]
+	path = prh-rules
+	url = https://github.com/kako-no-hakoniwa/prh-rules.git
