@@ -2,7 +2,13 @@
   "plugins": [
     "review"
   ],
-  "filters": {},
+  "filters": {
+    "allowlist": {
+      "allow": [
+        "つかった"
+      ]
+    }
+  },
   "rules": {
     "preset-japanese": true,
     "prh": {
