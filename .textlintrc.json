@@ -1,0 +1,15 @@
+{
+  "plugins": [
+    "review"
+  ],
+  "filters": {},
+  "rules": {
+    "preset-japanese": true,
+    "prh": {
+      "rulePaths": [
+        "prh-rules/languages/ja/typo.yml",
+        "prh-rules/media/techbooster.yml"
+      ]
+    }
+  }
+}
