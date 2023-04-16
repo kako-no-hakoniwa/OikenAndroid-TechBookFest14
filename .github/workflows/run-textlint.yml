@@ -1,0 +1,24 @@
+name: run-textlint
+on: 
+  pull_request_target:
+    types: [ opened, synchronize ]
+    paths: [ 'articles/*.re' ]
+jobs:
+  run-textlint:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 14
+      - run: npm install
+      - run: npx textlint ./articles/*.re >> ./.textlint.log
+      - if: ${{ failure() }}
+        run: gh pr comment --body-file ./.textlint.log "${URL}"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          URL: ${{ github.event.pull_request.html_url }}
