@@ -4,7 +4,7 @@ on:
     types: [ opened, synchronize ]
     paths: [ 'articles/*.re' ]
 jobs:
-  run-textlint-minimum:
+  run-textlint:
     runs-on: ubuntu-latest
     permissions:
       pull-requests: write
