@@ -157,7 +157,7 @@ composeTestRule.onRoot().printToLog("TAG")
 printToLog()を呼び出すとLogcatに次のような出力が表示されます。(@<list>{Logcat})
 
 //list[Logcat][Logcat.sh]{
- Node #1 at (l=0.0, t=108.0, r=243.0, b=234.0)px
+Node #1 at (l=0.0, t=108.0, r=243.0, b=234.0)px
     |-Node #3 at (l=0.0, t=119.0, r=243.0, b=224.0)px, Tag: 'Button'
     Role = 'Button'
     Focused = 'false'
@@ -172,7 +172,22 @@ printToLog()を呼び出すとLogcatに次のような出力が表示されま�
 composeTestRule.onRoot(useUnmergedTree = true).printToLog("TAG")
 //}
 
+//list[LogcatUnMerged][LogcatUnMerged.sh]{
+Node #1 at (l=0.0, t=108.0, r=243.0, b=234.0)px
+    |-Node #3 at (l=0.0, t=119.0, r=243.0, b=224.0)px, Tag: 'Button'
+    Role = 'Button'
+    Focused = 'false'
+    Actions = [OnClick, RequestFocus]
+    MergeDescendants = 'true'
+    |-Node #5 at (l=63.0, t=147.0, r=180.0, b=196.0)px
+        Text = '[Submit]'
+        Actions = [GetTextLayoutResult]
+//}
+
+
 == Activityとリソースにアクセスする
+
+
 
 === createAndroidComposeRule
 
