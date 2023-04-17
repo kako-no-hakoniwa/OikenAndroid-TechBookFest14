@@ -121,11 +121,56 @@ composeTestRule
 
 == セマンティクスツリーを理解する
 
-=== マージされたツリーとマージされていないツリー
+ここまでJetpack ComposeでUIテストを実行するための基本操作を紹介してきました。この節はJetpack ComposeがどのようにUI階層を理解するのか紹介していきます。
 
-=== ツリーをデバッグする
+Jetpack Composeのセマンティクスツリーは、テストフレームワーク以外にユーザー補助サービスからの認識に利用されます。
 
-==== printToLog()
+セマンティクスツリーという時、2つのツリーをことを指します。子孫ノードをマージされたセマンティクスツリーとマージを適応せずすべてのノードをそのままにするマージされていないセマンティクスツリーがあります。
+
+=== マージされたツリー
+
+画面に表示されている内容を正しい意味で使えるには、子孫ノードを個別に扱うのではなくツリーをマージして1つのノードとして扱うと便利な場合があります。
+ボタンなどの複数の子ノードを含むコンポーザブルは、マージされたツリーでは1つのノードとして扱われます。これはユーザー補助サービスを使用する場合のフォーカス可能な要素を表す意味で有効です。
+
+Modifierにはセマンティクスプロパティをマージを指定することができるsemantics修飾子があります。(@<list>{semantics})
+
+//list[semantics][semantics.kt]{
+Modifier.semantics (mergeDescendants = true) {}
+//}
+
+semantics修飾子以外にもclickable修飾子とtoggleable修飾子を使用した場合にもその子孫ノードがマージされます。(@<list>{clickable})
+
+//list[clickable][clickable.kt]{
+Modifier.clickable { /*TODO*/ }
+//}
+
+
+=== マージされていないツリー
+
+テスト時にツリーからノードを検索したい場合、マージされていないツリーを用いると便利です。
+テスト中にツリーをデバッグした時printToLog()で確認できます。(@<list>{printToLog})
+
+//list[printToLog][printToLog.kt]{
+composeTestRule.onRoot().printToLog("TAG")
+//}
+
+printToLog()を呼び出すとLogcatに次のような出力が表示されます。(@<list>{Logcat})
+
+//list[Logcat][Logcat.sh]{
+ Node #1 at (l=0.0, t=108.0, r=243.0, b=234.0)px
+    |-Node #3 at (l=0.0, t=119.0, r=243.0, b=224.0)px, Tag: 'Button'
+    Role = 'Button'
+    Focused = 'false'
+    Text = '[Submit]'
+    Actions = [OnClick, RequestFocus, GetTextLayoutResult]
+    MergeDescendants = 'true'
+//}
+
+マージされていないツリーを使う必要がある時、useUnmergedTreeをtrueに設定します。(@<list>{useUnmergedTreeTrue})
+
+//list[useUnmergedTreeTrue][useUnmergedTreeTrue.kt]{
+composeTestRule.onRoot(useUnmergedTree = true).printToLog("TAG")
+//}
 
 == Activityとリソースにアクセスする
 
