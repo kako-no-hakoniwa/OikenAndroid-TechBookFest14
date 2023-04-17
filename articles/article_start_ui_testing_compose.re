@@ -187,6 +187,37 @@ Node #1 at (l=0.0, t=108.0, r=243.0, b=234.0)px
 
 == Activityとリソースにアクセスする
 
+Activityのリソースにアクセスする必要がある時、createComposeRuleの代わりにcreateAndroidComposeRuleを利用します。
+この時、空のActivityを使用してAndroidComposeTestRuleを作成します。@<list>{createAndroidComposeRule}の例はComponentActivityを作成してリソースにアクセスするテストです。
+
+AndroidManifest.xmlにComponentActivityを追加する必要があります。そのために次の依存関係を追加します。(@<list>{manifestdependency})
+
+//list[manifestdependency][manifest.gradle]{
+debugImplementation("androidx.compose.ui:ui-test-manifest:1.4.0")
+//}
+
+//list[manifest][manifest.kt]{
+<application
+    //...
+    <activity android:name=".ComponentActivity" />
+</application>
+//}
+
+//list[createAndroidComposeRule][createAndroidComposeRule.kt]{
+@get:Rule
+val composeTestRule = createAndroidComposeRule<ComponentActivity>()
+
+@Test
+fun test() {
+    composeTestRule.setContent {
+        MyAppTheme {
+            HelloCompose()
+        }
+    }
+    val label = composeTestRule.activity.getString(R.string.label)
+    composeTestRule.onNodeWithText(label).assertIsDisplayed()
+}
+//}
 
 
 === createAndroidComposeRule
