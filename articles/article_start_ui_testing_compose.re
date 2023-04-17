@@ -76,11 +76,27 @@ Button(modifier = Modifier.testTag("Button"), ...) {
 composeTestRule.onNode(hasParent(hasTestTag("Button")), useUnmergedTree = true)
 //}
 
+useUnmergedTree引数はマージされていないツリーからノードを検索する時にtrueを設定します。例えばボタンなどのコンポーザブル内を検索したい時に有効です。
 
 
 === アサーション確認
 
+アサーションはプログラムが正常に動作しているかどうかを検証するために使用され、期待通りに動作していることを保証することができます。
+Jetpack Composeではassert()を呼び出すことでアサーションを確認できます。(@<list>{assert})
 
+//list[assert][assert.kt]{
+composeTestRule
+   .onNode(hasParent(hasTestTag("Button")), useUnmergedTree = true)
+   .assert(hasText("Submit"))
+//}
+
+assert()内ではorやandで複数のマッチャーを用いることができます。(@<list>{multiMatcher})
+
+//list[multiMatcher][multiMatcher.kt]{
+composeTestRule
+    .onNode(hasParent(hasTestTag("Button")), useUnmergedTree = true)
+    .assert(hasText("Submit") or hasText("Cancel"))
+//}
 
 === アクション
 
