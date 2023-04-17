@@ -100,6 +100,25 @@ composeTestRule
 
 === アクション
 
+ノードに対してクリックやスワイプなどのアクションを実行したい場合は、performプリフィックスがついている関数を呼び出します。
+たとえば、クリックを実行するにはperformClick()を呼び出します。(@<list>{performClick})
+
+//list[performClick][performClick.kt]{
+composeTestRule
+    .onNode(hasParent(hasTestTag("Button")), useUnmergedTree = true)
+    .performClick()
+//}
+
+perform関数の中でアクションを複数指定することはできません。ノードに対して複数アクションを行なう場合はperform関数を複数回呼び出します。
+次のコードは、スクロールした後にクリックを実行するアクション例です。(@<list>{performClickAfterPerformScroll})
+
+//list[performClickAfterPerformScroll][performClickAfterPerformScroll.kt]{
+composeTestRule
+    .onNode(hasParent(hasTestTag("Button")), useUnmergedTree = true)
+    .performScrollTo()
+    .performClick()
+//}
+
 == セマンティクスツリーを理解する
 
 === マージされたツリーとマージされていないツリー
