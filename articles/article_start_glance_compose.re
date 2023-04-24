@@ -77,7 +77,8 @@ Glanceでは GlanceAppWidgetReceiver と GlanceAppWidget という登場人物�
 リスト表示とか。
 サイズ変更とか。
 
-
+=== Modifierがいない！？
+いません。ちなみに間違えて使ってしまうと謎に丁寧なエラー表示に遭遇します。
 
 
 
