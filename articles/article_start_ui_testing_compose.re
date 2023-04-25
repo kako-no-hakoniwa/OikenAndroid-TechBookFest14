@@ -220,11 +220,61 @@ fun test() {
 //}
 
 
-=== createAndroidComposeRule
-
 == 状態の復元のテスト
 
-=== StateRestorationTester
+アクティビティの再生成された場合、コンポーザブルの状態が正しく復元されているか検証する必要があります。
+例えば、rememberSaveableを実装した次のようなコンポーザブルがあるとします。(@<list>{rememberSaveable})
+
+//list[rememberSaveable][rememberSaveable.kt]{
+@Composable
+fun Counter() {
+    var count by rememberSaveable {
+        mutableStateOf(0)
+    }
+    Column {
+        Text(
+            text = "$count"
+        )
+        IconButton(onClick = { count++ }) {
+            Icon(
+                imageVector = Icons.Default.Add,
+                contentDescription = "increment"
+            )
+        }
+    }
+}
+//}
+
+Counter()コンポーザブルはアクティビティが再生成された場合でもcountの状態を保持します。
+このようなコンポーザブルをテストする時、StateRestorationTesterを利用することができます。(@<list>{stateRestorationTester})
+
+//list[stateRestorationTester][stateRestorationTester.kt]{
+@get:Rule
+val composeTestRule = createComposeRule()
+    
+@Test
+fun test() {
+    val restorationTester = StateRestorationTester(composeTestRule)
+
+    restorationTester.setContent {
+        CounterScreen()
+    }
+
+    composeTestRule
+        .onNode(hasText("0"))
+        .assertIsDisplayed()
+
+    composeTestRule
+        .onNode(hasContentDescription("increment"))
+        .performClick()
+
+    restorationTester.emulateSavedInstanceStateRestore()
+
+    composeTestRule
+        .onNode(hasText("1"))
+        .assertIsDisplayed()
+}
+//}
 
 == Firebase Robo Test での認証
 
