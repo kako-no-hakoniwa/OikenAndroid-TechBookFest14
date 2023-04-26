@@ -287,7 +287,7 @@ Composeでナビゲーションのテストを行う場合、次の依存関係�
 androidTestImplementation "androidx.navigation:navigation-testing:2.5.3"
 //}
 
-TestNavHostControllerのインスタンス化します。@Beforeアノテーションをつけたメソッドにインスタンス化を行う実装を処理しておきます。
+TestNavHostControllerのインスタンス化します。@Beforeアノテーションをつけたメソッドにインスタンス化を行う実装を処理しておきます。(@<list>{before})
 
 //list[before][before.kt]{
 @get:Rule
@@ -305,7 +305,7 @@ fun setUpNavHost() {
 //}
 
 以降、ナビゲーションのテストを実行できるようになります。
-ログインボタンを押した後、想定される遷移した先のRouteのアサーションを確認するテストは次のようになります。
+ログインボタンを押した後、想定される遷移した先のRouteのアサーションを確認するテストは次のようになります。(@<list>{navigationTest})
 
 //list[navigationTest][navigationTest.kt]{
 @Test
@@ -320,5 +320,133 @@ fun navigation_performLogin_navigateToCounter() {
 }
 //}
 
-== Firebase Robo Test での認証
+== 運用に乗せる
 
+=== CIでUIテストを自動化する
+
+UIテストをPullRequest作成時やPush時に自動で実行することで、手動でテスト実行するコストの削減と追加実装によるデグレーションが起きていないかチェックを自動で行うことができます。
+CIサービスを用いている環境であれば簡単な設定でUIテストを自動化することができます。
+
+例えばCircleCIではAndroidシステムのOrbが用意されているため、次のような設定でCircleCI上でUIテストを実行できます。(@<list>{ciTest})
+
+//list[ciTest][ciTest.yml]{
+jobs:
+  android-test:
+    executor:
+      name: android/android-machine
+      resource-class: xlarge
+    steps:
+      - checkout
+      - android/start-emulator-and-run-tests:
+          test-command: ./gradlew connectedDebugAndroidTest
+          system-image: system-images;android-30;google_apis;x86
+//}
+
+=== Firebase Test Lab を利用したUIテスト自動化
+
+多種多様なデバイスや構成でテストを行いたい場合にFirebase Test Labを用いると便利です。
+Firebase Test Labの利用はConsole上でも行えますが、gcloud CLIによりローカルPCやCIサービス上でも利用できます。
+
+Firebase Test Labする前にテスト対象アプリとテスト実行アプリをビルドする必要があります。(@<list>{buildApk})
+
+//list[buildApk][buildApk.sh]{
+./gradlew :app:assembleDebug
+./gradlew :app:assembleDebugAndroidTest
+//}
+
+デフォルトでは次のフォルダ内にapkファイルが生成されます。
+
+//list[apkholder][apkholder.sh]{
+/app/build/outputs/apk
+//}
+
+生成できたapkをFirebase Test Labでテスト実行します。
+インストルメンテーションテストを実行する場合次のようなコマンドで実行することができます。
+
+//list[gcloudtest][gcloudtest.sh]{
+gcloud firebase test android run \
+  --type instrumentation \
+  --app app/build/outputs/apk/debug/app-debug.apk \
+  --test app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk \
+  --device model=panther,version=33,locale=en,orientation=portrait  \
+  --client-details matrixLabel="Example matrix label"
+//}
+
+=== Firebase Robo Test での認証
+Firebase Test Labにはインストルメンテーションテストの他にRobo Testというテストツールがあります。
+Robo Testはアプリのユーザー インターフェースを分析し、実行可能なアクティビティを自動的にシミュレートしてテストを実行します。
+
+インストルメンテーションテストと異なりテストコードを必要としないのが特徴です。
+
+アプリにログイン画面などの認証がある場合、Robo Testでは設定をしておくことで自動で認証を行うことができます。
+認証はコンソールのGUI上で設定できる他に、Robo スクリプトを実行時に指定することができます。
+
+Composeで実装されたログイン画面の認証を行う場合、Robo Testが任意のコンポーザブルにアクセスできるようにModifier.testTagを設定します。
+
+//list[composeLogin][composeLogin.sh]{
+@Composable
+fun LoginScreen() {
+    Column(
+        // ...
+    ) {
+        OutlinedTextField(
+            modifier = Modifier
+                .testTag("emailLogin"),
+            // ...
+        )
+        OutlinedTextField(
+            modifier = Modifier
+                .testTag("passwordLogin"),
+            // ...
+        )
+        Button(
+            modifier = Modifier
+                .testTag("buttonLogin"),
+            // ...
+        ) {
+            Text(text = "Login")
+        }
+    }
+}
+//}
+
+このLoginScreenコンポーザブルをRobo Testで認証させる場合、例えば次のようなRobo スクリプトを渡すと認証を自動で行えます。
+
+//list[roboScript][roboScript.sh]{
+[
+  {
+    "crawlStage": "crawl",
+    "contextDescriptor": {
+      "condition": "app_under_test_shown"
+    },
+    "actions": [
+      {
+        "eventType": "VIEW_TEXT_CHANGED",
+        "replacementText": "example@example.com",
+        "elementDescriptors": [
+          {
+            "resourceId": "com.myapplication:id/emailLogin"
+          }
+        ]
+      },
+      {
+        "eventType": "VIEW_TEXT_CHANGED",
+        "replacementText": "password",
+        "elementDescriptors": [
+          {
+            "resourceId": "com.myapplication:id/passwordLogin"
+          }
+        ]
+      },
+      {
+        "eventType": "VIEW_CLICKED",
+        "elementDescriptors": [
+          {
+            "resourceId": "com.myapplication:id/buttonLogin"
+          }
+        ]
+      }
+    }
+  }
+]
+//}
