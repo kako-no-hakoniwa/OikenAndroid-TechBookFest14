@@ -276,5 +276,49 @@ fun test() {
 }
 //}
 
+== ナビゲーションのテスト
+
+実際のアプリは複数の画面を遷移（以下、ナビゲーション）させることが一般的です。
+ナビゲーションの実装がされているアプリであれば、ナビゲーションのテストも行うことが望ましいです。
+
+Composeでナビゲーションのテストを行う場合、次の依存関係を追加します。(@<list>{navigationDependency})
+
+//list[navigationDependency][navigationDependency.gradle]{
+androidTestImplementation "androidx.navigation:navigation-testing:2.5.3"
+//}
+
+TestNavHostControllerのインスタンス化します。@Beforeアノテーションをつけたメソッドにインスタンス化を行う実装を処理しておきます。
+
+//list[before][before.kt]{
+@get:Rule
+val composeTestRule = createComposeRule()
+private lateinit var navController: TestNavHostController
+
+@Before
+fun setUpNavHost() {
+    composeTestRule.setContent {
+        navController = TestNavHostController(LocalContext.current)
+        navController.navigatorProvider.addNavigator(ComposeNavigator())
+        AppNavHost(navController = navController)
+    }
+}
+//}
+
+以降、ナビゲーションのテストを実行できるようになります。
+ログインボタンを押した後、想定される遷移した先のRouteのアサーションを確認するテストは次のようになります。
+
+//list[navigationTest][navigationTest.kt]{
+@Test
+fun navigation_performLogin_navigateToCounter() {
+    composeTestRule
+        .onNode(hasText("Login"))
+        .performClick()
+
+    val route = navController.currentBackStackEntry?.destination?.route
+
+    assertEquals(route, "counter")
+}
+//}
+
 == Firebase Robo Test での認証
 
