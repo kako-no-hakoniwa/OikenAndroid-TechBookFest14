@@ -3,73 +3,142 @@
 == Glanceって何さ
 
 Glanceとは、AndroidのWidgetをJetpackComposeの書き方で書けるうんぬんかんぬん
+まだアルファなのでうんたらかんたら
 
 === そもそもWidgetってどんなのだっけ
 Widgetとはうんぬんかんぬん。静的な情報とか RemoteViewとかの実装が必要で
 
 === JetpackComposeで書けるってどういうこと
-記法が使えるよ、でもRecomposeとかはないよ Viewをつくってまるっと更新するイメージだよ
+Glanceを使うと、Androidのウィジェット開発において、Jetpack Composeの記法を利用してWidgetを記述できます。
+
+ただし、Jetpack Composeの全ての機能がウィジェット開発で利用できるわけではありません。
+例えば普段馴染みのあるModifierはGlanceでは使えません。代わりにGlanceModifierというものを使うよ
+
+また、表示する内容を変更する際に、状態管理に関連するRecomposeのような仕組みではなくView全体を更新するイメージで進めることができます。
+
+Jetpack Composeを使ったウィジェット開発では、従来のRemoteViewsを使った方法と比べてシンプルにウィジェットを作成できます。
+またアプリ本体のコードにJetpack Composeを利用している場合、一貫性のあるコーディングスタイルを保つことが可能になります。
 
 
 == 環境構築
-Glanceの開発をはじめるためにまずはComposeの環境を整えるよ（@<list>{build.gradle})
+☆念の為JetpackCompose自体の依存も書こうかな。 動作している環境は書くべきか。
+
+Glanceを使用したウィジェット開発を始めるためには、まずJetpack Composeの開発環境を整える必要があります。この章では、環境構築に必要な手順を解説します。
+プロジェクトのbuild.gradleファイルにJetpack ComposeとGlanceの依存関係を追加します。以下のコードをプロジェクトのbuild.gradleに追記します。（@<list>{build.gradle})
 
 //list[build.gradle][build.gradle]{
-androidImplementation("")hogehoge compose
+dependencies {
+    // 他の依存関係は省略
+    implementation 'androidx.compose.ui:ui:<compose_version>'
+    implementation 'androidx.compose.material:material:<compose_version>'
+    implementation 'androidx.compose.ui:ui-tooling:<compose_version>'
+    implementation 'androidx.glance:glance:<glance_version>'
+    implementation 'androidx.glance:glance-compose:<glance_version>'
+}
 //}
 
-Glanceの開発をはじめるためにはbuild.gradleに次の依存関係を追加します。（@<list>{build.gradle2})
+Jetpack Composeを利用するためには、Android Gradle Pluginのバージョンも最新にする必要があります。プロジェクトのbuild.gradleに以下のように記述しましょう。（@<list>{build.gradle2})
 
 //list[build.gradle2][build.gradle]{
-androidImplementation("")hogehoge glance 
+buildscript {
+    dependencies {
+        // 他の依存関係は省略
+        classpath 'com.android.tools.build:gradle:<agp_version>'
+    }
+}
 //}
 
+Jetpack Composeを利用するアプリケーションでは、Kotlinのバージョンも最新にする必要があります。プロジェクトのbuild.gradleに以下のように記述しましょう。（@<list>{build.gradle3})
+//list[build.gradle3][build.gradle]{
+buildscript {
+    ext.kotlin_version = '<kotlin_version>'
+    dependencies {
+        // 他の依存関係は省略
+        classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version'
+    }
+}
+//}
 
-== Glanceを利用したシンプルなウィジェットの構築
+これで、Jetpack ComposeとGlanceを利用するための基本的な環境構築が完了しました。次の章では、実際にGlanceを利用したウィジェットの構築方法を解説します。
+
+== Glanceを利用したシンプルなウィジェットの構築 Hello World
+☆あれ、とりあえず最初はReceiverいなくても動く気がしてきたので試す。
+
 まずは画面更新などを考えない、シンプルなウィジェットを表示してみましょう。
 
-Glanceでは GlanceAppWidgetReceiver と GlanceAppWidget という登場人物がいるよ
-それぞれ継承したクラスを作っていくよ
+Glanceでは主に画面自体であるGlanceAppWidgetと、ウィジェット操作の起点になるGlanceAppWidgetReceiverが主なクラスです。
+これらを継承したクラスを実装していきます。
 
+=== GlanceAppWidgetの作成
+まずは、GlanceAppWidgetクラスを継承したカスタムウィジェットクラスを作成します。このクラスでは、@Composableアノテーションを持った関数を使ってウィジェットのUIを記述します。
 
-→ あれ、とりあえず最初はReceiverいなくても動く気がしてきたので試す。
+//list[GlanceAppWidget][GlanceAppWidgetを継承してComposableを記述]{
+class SimpleGlanceAppWidget : GlanceAppWidget() {
+    @Composable
+    override fun Content() {
+        Text(text = "Hello, Glance!")
+    }
+}
+//}
 
 
 === GlanceAppWidgetReceiverの作成
+☆ これってどこの処理で呼び出されてるか調べないとね
 
-=== GlanceAppWidgetの作成
-こいつが@Composableを持っている
 
-=== meta-data.xmlの作成
-更新頻度（後述）など
+GlanceAppWidgetReceiverはウィジェットのアップデートイベントや、その他のウィジェットに関連するイベントを受け取るためのクラスです。
+ウィジェットのアップデートなどは後述しますが、ひとまずウィジェットを表示させるためには最低限以下の記述が必要です、
+//list[GlanceAppWidgetReceiver][GlanceAppWidgetReceiverを継承しglanceAppWidgetをoverride]{
+class SimpleGlanceAppWidgetReceiver : GlanceAppWidgetReceiver() {
+    override val glanceAppWidget: GlanceAppWidget
+        get() = SimpleGlanceAppWidget()
+}
+//}
+
+=== メタデータファイルの作成
+☆どれが最低限マストなんだろう？？initialLayoutって必要？？実際には使われないけどまだ必要的な？
+
+
+ウィジェットの設定や動作に関する情報を定義するためにXMLでメタデータファイルを作成する必要があります。
+//list[metadata][simple_glance_appwidget_metadata]{
+<appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
+    android:initialLayout="@layout/simple_glance_appwidget"
+    android:minHeight="40dp"
+    android:minWidth="40dp"
+    android:updatePeriodMillis="1800000"
+    android:widgetCategory="home_screen">
+</appwidget-provider>
+//}
+
 
 === AndroidManifestに追記
 
-これは通常のBroadcastReceiver追加時と同じだけど忘れずに
+GlanceAppWidgetReceiverはBroadcastReceiverを継承しているため、通常の追加時と同じように忘れずにAndoridManifestに記述します。
+また先程作成したメタデータファイルもManifestに記述します。
 
 //list[AndroidManifest][AndroidManifest.xml]{
 <receiver
-    android:name=".GlanceAppWidgetReceiverSample"
+    android:name=".SimpleGlanceAppWidgetReceiver"
     android:exported="false">
     <intent-filter>
         <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-        <action android:name="action_request_update" />
     </intent-filter>
     <meta-data
         android:name="android.appwidget.provider"
-        android:resource="@xml/glance_appwidget_sample_meta_data" />
+        android:resource="@xml/simple_glance_appwidget_metadata" />
 </receiver>
 //}
 
 
+
+☆metadata の中身をふるふるで書いたリストが欲しいな。
 === ビルドしてみよう
-ビルドしてウィジェットをホームに追加すると…
+ビルドが完了したら、実機またはエミュレーターでアプリを起動し、ホーム画面に作成したウィジェットを追加してみましょう。正しく設定されていれば、ウィジェットに"Hello, Glance!"というテキストが表示されるはずです。
 
 ここに画像
+Hello World!!
 
-
-とりあえずGlanceハローワールド成功です！！
-
+これで、Glanceを利用してシンプルなウィジェットを構築する方法がわかりました。次の章では、ウィジェットの表示をカスタマイズしたり、動的に更新する方法などを解説します。
 
 
 == ウィジェットの表示をカスタム
@@ -144,13 +213,36 @@ appWidgetManager.updateAppWidget() でremoteViewをセットする
 
 レベルは自分でセットしたウィジェットのサイズで調整？？
 
-必要なもの
+===　ゲーム開発の概要
+まずは、Glanceを使って簡単なミニゲームを開発する方法を考えていきましょう。ゲームのシンプルな要素を実装し、遊べる程度のものを目指します。
 
-コントロールボタン 自機の操作
+===　ゲームの構造
+ウィジェット上で動作する簡単なミニゲームを作成するため、以下のような構造を考えます。
 
-ランダムに敵の生成をするロジック
+自機の移動
+敵の生成と移動
+衝突判定
+スコアの表示
+===　自機の移動
+コントロールボタンを設置し、ボタンをクリックしたときに自機の位置を更新することで、自機の移動を実現します。
 
-描画
+===　敵の生成と移動
+一定時間ごとに、画面上部からランダムな位置で敵を生成し、敵を下方向に移動させることでゲームの難易度を作ります。
+
+===　衝突判定
+自機と敵が衝突した場合、ゲームオーバーとなります。衝突判定は矩形同士の判定を行うことで実現できます。
+
+===　スコアの表示
+ウィジェット上にスコアを表示し、敵を避けた回数に応じてスコアが増加する仕組みを実装します。
+
+===　ゲームの最適化
+ウィジェット上で動作するゲームのため、電池消費や画面描画の遅さを考慮し、最適化を行います。
+
+===　ゲームの完成
+ここまでで、Glanceを使ったミニゲームが完成しました。ウィジェット上で遊べるシンプルなゲームが実現できました。
+
+===　まとめ
+この記事では、Jetpack ComposeのGlanceを使ったウィジェット開発について紹介しました。Glanceを使えば、Jetpack Composeの記法でウィジェットを作成できるため、開発者にとってより効率的な開発が可能です。
 
 
 
