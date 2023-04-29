@@ -142,20 +142,123 @@ Hello World!!
 
 
 == ウィジェットの表示をカスタム
-
-リスト表示とか。
-サイズ変更とか。
+Hello Worldが成功したため、ここからは少しだけ表示をカスタムしていきましょう。
 
 === Modifierがいない！？
-いません。ちなみに間違えて使ってしまうと謎に丁寧なエラー表示に遭遇します。
+通常のJetpack ComposeでUIを作成する際、Modifierを使用して要素のレイアウトやスタイルを変更することが一般的です。
+ただし、GlanceではModifierは直接利用できず、代わりにGlanceModifierというものを使います。基本的な使い方はModifierと同じなのですが、用意されている属性に限りがあるため、通常のModifierと同じようにレイアウトを組めない場合があります。
 
+☆ここにGlanceで用意されている要素のリスト？？ もしくはないものの代表例
+
+
+ここでコラム的な枠
+☆間違ってModifierを使ったりするとこうなる
+エラーの画像
+Modifierを誤って使ってしまった場合、エラーメッセージが表示されることがあります。このような場合は、Glanceで利用できるコンポーズ要素や属性について調べ、適切な方法で表示をカスタマイズするようにしましょう。
+
+=== リスト表示
+LazyColumnが使えます。（ただしパッケージはandroidx.glance）
+
+=== 画像の表示
+普通の感じで書けます（ただし使うものはandroidx.glance.ImageKtです）
+//list[ImageKt][画像の表示]{
+Image(
+    provider = ImageProvider(
+        R.drawable.ic_launcher_foreground
+    ),
+    contentDescription = null,
+    modifier = GlanceModifier.size(90.dp)
+)
+//}
+
+=== クリックアクションの追加
+GlanceModifier.clickable を使う
+
+=== Activityの起動
+actionStartActivity
 
 
 == ウィジェットの表示を動的に更新する
+完全に
 
 
 === どうやってデータ自体を更新する？
-dataStoreが使える。
+androidx.glance.appwidget.state.GlanceAppWidgetStateKt#updateAppWidgetState というメソッドが用意されており、引数に`updateState: suspend (MutablePreferences) -> Unit`としてdataStoreが使えます。
+glanceIdも引数に
+
+
+ウィジェットは複数作成することができ、それぞれ識別するidが存在します。この更新処理も引数にidを取るため、
+複数配置したウィジェットのうちそれぞれで別のデータを保持・表示することが可能です。
+
+
+ウィジェット側でデータを読み込むコード
+☆ここにコード
+
+しかし、通常のJetpackComposeとは違い、GlanceではComposable関数の引数に渡したデータが更新されても勝手にRecomposeをしてくれるわけではありません。
+手動でトリガーを引く必要があります。
+GlanceAppWidgetにupdate関数が用意されているので、データを更新した後にそれをコールします。
+//list[手動更新][手動でcomposeのトリガーを引く]{
+GlanceAppWidgetSample().update(context, id)
+//}
+
+
+
+これらをまとめたReceiverでのonReceive()処理は以下の感じです。
+//list[onReceive][onReceive処理]{
+    override fun onReceive(context: Context, intent: Intent) {
+        super.onReceive(context, intent)
+        android.util.Log.e("呼ばれた", "onReceive入り口")
+
+//        if (intent.action == ACTION_REQUEST_UPDATE) {
+            android.util.Log.e("呼ばれた", "onReceive")
+
+            update(context)
+//        }
+    }
+
+    private fun update(context: Context) {
+        android.util.Log.e("呼ばれた", "update")
+
+        scope.launch {
+            val range = (0..9999999999)
+            val randomList = listOf<String>(
+                range.random().toString(),
+                range.random().toString(),
+                range.random().toString(),
+                range.random().toString(),
+            )
+
+            val colorRange = (0..100)
+            val red = colorRange.random()
+            val green = colorRange.random()
+            val blue = colorRange.random()
+
+            val ids =
+                GlanceAppWidgetManager(context).getGlanceIds(GlanceAppWidgetSample::class.java)
+            ids.forEach { id ->
+                updateAppWidgetState(context, id) { pref ->
+                    pref[stringPreferencesKey(GlanceAppWidgetSample.KEY_PREFERENCES_LIST)] =
+                        randomList.joinToString()
+
+                    pref[intPreferencesKey(GlanceAppWidgetSample.KEY_PREFERENCES_RED)] = red
+                    pref[intPreferencesKey(GlanceAppWidgetSample.KEY_PREFERENCES_BLUE)] = blue
+                    pref[intPreferencesKey(GlanceAppWidgetSample.KEY_PREFERENCES_GREEN)] = green
+                }
+                GlanceAppWidgetSample().update(context, id)
+            }
+
+
+//            AlarmManagerを使って定期的に更新する場合の処理。 ただし最短で5秒の制限があるため使えない
+//            val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+//            alarmManager.setExact(
+//                AlarmManager.RTC_WAKEUP,
+//                System.currentTimeMillis() + UPDATE_INTERVAL,
+//                createUpdatePendingIntent(context)
+//            )
+        }
+    }
+//}
+
 
 
 === ここに決定木みたいなの
