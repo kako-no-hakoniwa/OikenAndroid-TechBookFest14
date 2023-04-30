@@ -348,6 +348,11 @@ update5回ごとに1回 敵の生成
 
 シューティング要素ありなら、毎回のupdateで位置を一つ上にずらす そこに敵がいれば破棄。
 
+
+=== 時間の経過にともない難しくなる仕組み
+敵を増やす
+
+
 === 回復アイテム
 
 
@@ -362,6 +367,9 @@ update5回ごとに1回 敵の生成
 
 ===　ゲームの最適化
 ウィジェット上で動作するゲームのため、電池消費や画面描画の遅さを考慮し、最適化を行います。
+
+今回の要素数ではあまり問題になりませんが、SharedではなくProtoDatastoreを使う
+例えば100×100とか。
 
 
 ===　ゲームの完成
@@ -386,5 +394,31 @@ update5回ごとに1回 敵の生成
 Error in Glance App Widget
  java.lang.IllegalArgumentException: Cannot find container Row with 12 children
 
- ウィジェットの幅をはみ出るようなコンテンツをセットすると発生。?Rowで11個以上で発生した
+ ウィジェットの幅をはみ出るようなコンテンツをセットすると発生。?Rで11個以上で発生した とおもったけどサイズとかなのかなやっぱり
  とりあえず10子でdefaultWeightを使うと良さそうな感じ
+
+
+
+
+
+
+
+
+
+
+
+ === ぼやき
+ うーんdataStoreでたくさんの値をまとめて効率的に取れるのかな`
+
+ Widget自身でupdateは呼べる？？
+ 呼べるとして、今回はスタートボタンで初期化などを走らせたいからそれをBroadcastで受け取って処理するのは間違っていない
+とは思うけど
+
+右左ボタンの中でupdateを呼ぶと、自位置だけ固まるような挙動になった。これはdataStoreの更新の前に自身をcomposeし直すから？？？
+
+宇宙背景 https://sozaino.site/archives/7558
+https://sozaino.site/archives/8580
+
+https://sozaino.site/archives/4807
+
+
