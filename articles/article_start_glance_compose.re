@@ -1,4 +1,4 @@
-= Glanceお入門
+= Glanceで遊ぼう
 
 == Glanceって何？
 
@@ -43,11 +43,9 @@ android {
 Glanceは専用のComposeを使うため、通常のJetpack Composeの依存関係の追加は不要です。
 
 == Glanceを利用したシンプルなウィジェットの構築 Hello World
-☆あれ、とりあえず最初はReceiverいなくても動く気がしてきたので試す。
+まずは画面更新などを考えない、シンプルなウィジェットでHello Worldしてみましょう。
 
-まずは画面更新などを考えない、シンプルなウィジェットを表示してみましょう。
-
-Glanceでは主に画面自体であるGlanceAppWidgetと、ウィジェット操作の起点になるGlanceAppWidgetReceiverが主なクラスです。
+GlanceではGlanceAppWidgetとGlanceAppWidgetReceiverというクラスが主要な登場人物です
 これらを継承したクラスを実装していきます。
 
 === GlanceAppWidgetの作成
