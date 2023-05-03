@@ -14,7 +14,7 @@ Glanceを使うと、ウィジェット開発においてJetpack Composeの記�
 例えば普段馴染みのあるModifierはGlanceでは使えず、代わりにGlanceModifierというものを使います。
 また、状態の変更に応じて表示内容を差分更新してくれる仕組み（Recompose）はなく、画面全体を更新するイメージです。
 
-これらの前提はありつつも、Glanceを使ったウィジェット開発は、従来のRemoteViewsを使った方法と比べてシンプルにウィジェットを作成できます。
+これらの前提はありつつも、Glanceを使ったウィジェット開発は、従来のRemoteViewsを直接使った方法と比べてシンプルにウィジェットを作成できます。
 
 == 環境構築
 プロジェクトのbuild.gradleファイルにGlanceの依存関係を追加します。（@<list>{build.gradle})
@@ -38,7 +38,7 @@ android {
     }
 }
 //}
-
+※参照 https://developer.android.com/jetpack/androidx/releases/compose-kotlin
 
 Glanceは専用のComposeを使うため、通常のJetpack Composeの依存関係の追加は不要です。
 
@@ -126,29 +126,32 @@ class GlanceAppWidgetReceiverSample : GlanceAppWidgetReceiver() {
 ここに画像
 Hello Glance!!
 
-== ウィジェットの表示をカスタム
-Hello Worldが成功したため、ここからは少しだけ表示をカスタムしていきましょう。
+== ウィジェットの表示をカスタムする方法
+ここからはウィジェットの表示をカスタムしていきましょう。
 
-=== Modifierがいない！？
+=== GlanceModifier
 通常のJetpack ComposeでUIを作成する際、Modifierを使用して要素のレイアウトやスタイルを変更することが一般的です。
 ただし、GlanceではModifierは直接利用できず、代わりにGlanceModifierというものを使います。基本的な使い方はModifierと同じなのですが、用意されている属性に限りがあるため、通常のModifierと同じようにレイアウトを組めない場合があります。
 
-☆ここにGlanceで用意されている要素のリスト？？ もしくはないものの代表例
+☆ 参照 https://developer.android.com/reference/kotlin/androidx/glance/GlanceModifier#extension-functions_1
 
+また、通常のComposeではRowであればhorizontalArrangement、ColumnであればverticalArrangementと、引数にArrangementを取りますがGlanceのRowとColumnはhorizontalもverticalもAlignmentしか引数に取りません。
+そのためArrangement.SpaceArroundやArrangement.SpaceBetweenなどを指定した要素の配置は現状できません。
+RowScopeで用意されているGlanceModifierにweight()はなくdefaultWeight()しかいないため、自由にweightを指定することができません。
 
-
-Arrangement.SpaceAround とかSpaceBetweenもないので現状はRowの中身はBoxなどを駆使して配置することになる
+などといった制約はありますが、それでも
 
 ここでコラム的な枠
 ☆間違ってModifierを使ったりするとこうなる
 エラーの画像
-Modifierを誤って使ってしまった場合、エラーメッセージが表示されることがあります。このような場合は、Glanceで利用できるコンポーズ要素や属性について調べ、適切な方法で表示をカスタマイズするようにしましょう。
+Modifierを始めとした通常のComposeのコンポーネントを誤って使ってしまった場合、エラーメッセージが表示されることがあります。このような場合は、Glanceで利用できるコンポーズ要素や属性について調べ、適切な方法で表示をカスタマイズするようにしましょう。
 
 === リスト表示
 LazyColumnが使えます。（ただしパッケージはandroidx.glance）
+LazyRowはまだありません。
 
 === 画像の表示
-普通の感じで書けます（ただし使うものはandroidx.glance.ImageKtです）
+普通のComposeと同じように書けます（ただし使うものはandroidx.glance.ImageKtです）
 //list[ImageKt][画像の表示]{
 Image(
     provider = ImageProvider(
@@ -159,24 +162,54 @@ Image(
 )
 //}
 
+
 === クリックアクションの追加
-GlanceModifier.clickable を使う
+GlanceModifier.clickableを使うことでクリック時の処理を指定することができます。
+clickableはandroidx.glance.action.ActionというInterfaceを引数に取るため、Actionを実装することで処理を記述できます。
 
-=== Activityの起動
-actionStartActivity
+==== Activityの起動
+いくつかのActionは予め用意されています。
+Activityの起動にはactionStartActivity()を使います。
+//list[Activityの起動][Activityの起動]{
+Box(
+    modifier = GlanceModifier.clickable(actionStartActivity<MainActivity>())
+    ) {
+    }
+//}
+
+またBroadcast送信にはactionSendBroadcast()、Serviceの起動にはactionStartServece()が用意されています。
 
 
-== ウィジェットの表示を動的に更新する
+==== 独自Actionの起動
+独自のクリックアクションを定義するには、行いたい処理をActionCallbackを継承したクラスに記述し、そのクラスを actionRunCallback に型パラメータとして渡すことで実現できます。
+//list[独自のクリックアクション][独自のクリックアクションの実装]{
+Box(
+    modifier = GlanceModifier.clickable(actionRunCallback<SampleAction>())
+    ) {
+    }
+
+class SampleAction : ActionCallback {
+    override suspend fun onAction(
+        context: Context,
+        glanceId: GlanceId,
+        parameters: ActionParameters
+    ) {
+        // ここに行いたい処理
+    }
+}
+//}
+
+== ウィジェットの表示を更新する
 完全に
 
 
 === どうやってデータ自体を更新する？
 androidx.glance.appwidget.state.GlanceAppWidgetStateKt#updateAppWidgetState というメソッドが用意されており、引数に`updateState: suspend (MutablePreferences) -> Unit`としてdataStoreが使えます。
-glanceIdも引数に
+
 
 
 ウィジェットは複数作成することができ、それぞれ識別するidが存在します。この更新処理も引数にidを取るため、
-複数配置したウィジェットのうちそれぞれで別のデータを保持・表示することが可能です。
+複数配置したウィジェットのうちそれぞれで別のデータを保持・表示することも可能です。
 
 
 ウィジェット側でデータを読み込むコード
@@ -189,6 +222,8 @@ GlanceAppWidgetにupdate関数が用意されているので、データを更�
 GlanceAppWidgetSample().update(context, id)
 //}
 
+idを意識しない場合はupdateAll(context)も使えます。例えばタップされたウィジェットのみ更新するときはupdate(),
+例えば天気情報などすべてのウィジェットに反映すべきデータの更新後はupdateAll()を使うなど使い分けることができます。
 
 
 これらをまとめたReceiverでのonReceive()処理は以下の感じです。
@@ -248,20 +283,30 @@ GlanceAppWidgetSample().update(context, id)
 //}
 
 
+=== 何を使ってトリガーを引く？ ここに決定木みたいなの
+手動更新のみでOK → クリックイベントの中で更新
+一日1回でOK → onUpdate に 処理を書いてupdatePeriodMillis でOK？？
+30分に1回 → WorkManagerが良さそう？ もしくは updatePeriodMillis
+5分に1回 → AlarmManager
+それより高頻度 BroadcastIntentを投げる
+もしくは CoroutineのDelayで 自身の更新
 
-=== ここに決定木みたいなの
+高速更新は正直そもそもウィジェットに必要なさそう。
+あるとしたら秒時計とか？
+いずれの場合にも手動更新ボタンを用意しておくのが良さそうです。
 
-=== 何を使ってトリガーを引く？
-
+==== 手動更新
 
 ==== xmlに書いた時間で更新する
 updatePeriodMillis に指定する。でもこれは最低30分（要ソース）これを使うのが行儀がよいと思われる、けど実際にはもっと高頻度で更新したかったりする
 
-==== クリックイベントで更新する
-手動更新で十分であればupdatePeriodMillis と これの組み合わせでOK
-
-
 ==== 自分でupdateをかける
+
+==== WorkManager
+アプリの状態に依存せずに処理を継続できるという点で、これが一番行儀よくできそう。
+公式のサンプルアプリもこれを使っている。
+
+==== 
 Receiverがいる。ということはBroadCastintentをなげまくってなんとかできる
 
 === 落とし穴 …でもないか、要件次第かな？？？
@@ -283,6 +328,12 @@ widgetManager.getAppWidgetInfo でなんかSizeが取れそう？？
 
 
 == その他Tips
+
+onEnabled
+
+unUpdate
+
+onDisabled
 
 
 
