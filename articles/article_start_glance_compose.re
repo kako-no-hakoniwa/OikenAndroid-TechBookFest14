@@ -200,93 +200,74 @@ class SampleAction : ActionCallback {
 //}
 
 == ウィジェットの表示を更新する
-完全に
+ウィジェットの表示を更新するためには、まず表示要素となるデータの更新をした上で画面の更新処理を呼び出す必要があります。
 
-
-=== どうやってデータ自体を更新する？
-androidx.glance.appwidget.state.GlanceAppWidgetStateKt#updateAppWidgetState というメソッドが用意されており、引数に`updateState: suspend (MutablePreferences) -> Unit`としてdataStoreが使えます。
-
-
-
-ウィジェットは複数作成することができ、それぞれ識別するidが存在します。この更新処理も引数にidを取るため、
-複数配置したウィジェットのうちそれぞれで別のデータを保持・表示することも可能です。
-
-
-ウィジェット側でデータを読み込むコード
-☆ここにコード
-
-しかし、通常のJetpackComposeとは違い、GlanceではComposable関数の引数に渡したデータが更新されても勝手にRecomposeをしてくれるわけではありません。
-手動でトリガーを引く必要があります。
-GlanceAppWidgetにupdate関数が用意されているので、データを更新した後にそれをコールします。
-//list[手動更新][手動でcomposeのトリガーを引く]{
+=== ウィジェットの更新
+通常のJetpack Composeでは、引数にとったデータの変更を自動で検知しRecomposeされますが、Glanceでは手動で画面の更新を呼び出す必要があります。
+GlanceAppWidgetに用意されているupdate関数を使用します。（GlanceAppWidgetを継承して自分で作成したクラスのupdate()を呼び出します。）
+//list[手動更新update(context, id)][update(context, id)]{
 GlanceAppWidgetSample().update(context, id)
 //}
 
-idを意識しない場合はupdateAll(context)も使えます。例えばタップされたウィジェットのみ更新するときはupdate(),
-例えば天気情報などすべてのウィジェットに反映すべきデータの更新後はupdateAll()を使うなど使い分けることができます
+引数のidはウィジェットの識別IDです。ウィジェットは複数作成することができ、それぞれにidが存在します。
+例えば前述のActionCallBackのonAction()には引数としてidが渡ってくるため、そのidを使ってタップされたウィジェットのみ更新が可能です。
+idを意識しない場合はupdateAll(context)も使えます。すべてのウィジェットに反映すべきデータの更新後はupdateAll()を使う、など使い分けることができます
 
+//list[手動更新updateAll(context)][updateAll(context)]{
+GlanceAppWidgetSample().updateAll(context)
+//}
 
-これらをまとめたReceiverでのonReceive()処理は以下の感じです。
-//list[onReceive][onReceive処理]{
-    override fun onReceive(context: Context, intent: Intent) {
-        super.onReceive(context, intent)
-        android.util.Log.e("呼ばれた", "onReceive入り口")
+=== データの更新
+表示するためのデータの更新には、DataStore*の仕組みが使われます。
+androidx.glance.appwidget.state.GlanceAppWidgetStateKt#updateAppWidgetState()というメソッドがDataStoreの仕組みでできています。
+引数にGlanceStateDefinition<T>を取るタイプ（Proto Datastoreを使うタイプ）と、引数にsuspend (MutablePreferences) -> Unit`を取るタイプ（Preferences DataStoreを使うタイプ）のどちらも用意されています。
 
-//        if (intent.action == ACTION_REQUEST_UPDATE) {
-            android.util.Log.e("呼ばれた", "onReceive")
+//list[Proto DataStoreを使うタイプ][Proto DataStoreを使うタイプ]{
+suspend fun <T> updateAppWidgetState(
+    context: Context,
+    definition: GlanceStateDefinition<T>,
+    glanceId: GlanceId,
+    updateState: suspend (T) -> T,
+): T {
+    ・・・
+}
+//}
+//list[Preferences DataStoreを使うタイプ][Preferences DataStoreを使うタイプ]{
+suspend fun updateAppWidgetState(
+    context: Context,
+    glanceId: GlanceId,
+    updateState: suspend (MutablePreferences) -> Unit,
+) {
+    ・・・
+}
+//}
 
-            update(context)
-//        }
-    }
-
-    private fun update(context: Context) {
-        android.util.Log.e("呼ばれた", "update")
-
-        scope.launch {
-            val range = (0..9999999999)
-            val randomList = listOf<String>(
-                range.random().toString(),
-                range.random().toString(),
-                range.random().toString(),
-                range.random().toString(),
-            )
-
-            val colorRange = (0..100)
-            val red = colorRange.random()
-            val green = colorRange.random()
-            val blue = colorRange.random()
-
-            val ids =
-                GlanceAppWidgetManager(context).getGlanceIds(GlanceAppWidgetSample::class.java)
-            ids.forEach { id ->
-                updateAppWidgetState(context, id) { pref ->
-                    pref[stringPreferencesKey(GlanceAppWidgetSample.KEY_PREFERENCES_LIST)] =
-                        randomList.joinToString()
-
-                    pref[intPreferencesKey(GlanceAppWidgetSample.KEY_PREFERENCES_RED)] = red
-                    pref[intPreferencesKey(GlanceAppWidgetSample.KEY_PREFERENCES_BLUE)] = blue
-                    pref[intPreferencesKey(GlanceAppWidgetSample.KEY_PREFERENCES_GREEN)] = green
-                }
-                GlanceAppWidgetSample().update(context, id)
-            }
-
-
-//            AlarmManagerを使って定期的に更新する場合の処理。 ただし最短で5秒の制限があるため使えない
-//            val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-//            alarmManager.setExact(
-//                AlarmManager.RTC_WAKEUP,
-//                System.currentTimeMillis() + UPDATE_INTERVAL,
-//                createUpdatePendingIntent(context)
-//            )
+Preferences DataStoreを使ってデータ更新を行う一番シンプルなサンプルコードは以下のようになります。
+//list[Preferences DataStoreを使った更新サンプル][Preferences DataStoreを使った更新サンプル]{
+private suspend fun updateWidget(context: Context){
+    val manager = GlanceAppWidgetManager(context)
+    val glanceIds = manager.getGlanceIds(GlanceAppWidgetSample::class.java)
+    glanceIds.forEach { glanceId ->
+        updateAppWidgetState(context, glanceId) { prefs ->
+            prefs[stringPreferencesKey("key_name")] = "セットしたい文字列"
         }
     }
+    GlanceAppWidgetSample().updateAll(context)
+}
+//}
+
+セットしたデータを取り出すにはComposable関数の中で以下を呼び出すだけです。
+//list[Preferences DataStoreを使ったデータ取得サンプル][Preferences DataStoreを使ったデータ取得サンプル]{
+val prefs = currentState<Preferences>()
+val string: String = prefs[stringPreferencesKey("key_name")]
 //}
 
 
 === 何を使ってトリガーを引く？ ここに決定木みたいなの
 手動更新のみでOK → クリックイベントの中で更新
 一日1回でOK → onUpdate に 処理を書いてupdatePeriodMillis でOK？？
-30分に1回 → WorkManagerが良さそう？ もしくは updatePeriodMillis
+30分に1回 → WorkManagerが良さそう？ もしくは updatePeriodMillis でも
+WorkManagerは最短15分？？
 5分に1回 → AlarmManager
 それより高頻度 BroadcastIntentを投げる
 もしくは CoroutineのDelayで 自身の更新
