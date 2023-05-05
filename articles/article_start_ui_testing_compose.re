@@ -1,5 +1,8 @@
 = Composeで始めるUIテスト
 
+UIテストは、ユーザーインターフェース（UI）を対象とした自動化テストのことです。UIテストは、ソフトウェアのUIが意図した通りに機能し、ユーザーが期待する動作をするかどうかを確認できます。
+Jetpack composeで実装されたUIをテストする場合、UIテストを実行するためのAPIが提供されておりUIテストを簡単に実装することができます。この章では、Jetpack ComposeでUIテストを実装する方法を説明します。
+
 == コンポーザブルをテストする
 
 === 依存関係
@@ -372,6 +375,13 @@ gcloud firebase test android run \
   --device model=panther,version=33,locale=en,orientation=portrait  \
   --client-details matrixLabel="Example matrix label"
 //}
+
+Firebaseコンソールで次のようにテスト結果を確認することができます。
+
+//image[test_lab_result][Firebase Test Labのコンソール][scale=0.75]{
+
+//}
+
 
 === Firebase Robo Test での認証
 Firebase Test Labにはインストルメンテーションテストの他にRobo Testというテストツールがあります。
