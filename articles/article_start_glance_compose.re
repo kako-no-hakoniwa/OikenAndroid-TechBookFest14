@@ -219,20 +219,12 @@ GlanceAppWidgetSample().updateAll(context)
 
 === データの更新
 表示するためのデータの更新には、DataStore*の仕組みが使われます。
-androidx.glance.appwidget.state.GlanceAppWidgetStateKt#updateAppWidgetState()というメソッドがDataStoreの仕組みでできています。
-引数にGlanceStateDefinition<T>を取るタイプ（Proto Datastoreを使うタイプ）と、引数にsuspend (MutablePreferences) -> Unit`を取るタイプ（Preferences DataStoreを使うタイプ）のどちらも用意されています。
+DataStore自体にはPreferences DataStoreとProto　DataStoreの2種類がありますが、そのどちらもGlanceで利用できます。
+具体的には、androidx.glance.appwidget.state.GlanceAppWidgetStateKt#updateAppWidgetState()というメソッドが引数違いでPreferences DataStoreとProto　DataStore版のそれぞれが用意されています。
 
-//list[Proto DataStoreを使うタイプ][Proto DataStoreを使うタイプ]{
-suspend fun <T> updateAppWidgetState(
-    context: Context,
-    definition: GlanceStateDefinition<T>,
-    glanceId: GlanceId,
-    updateState: suspend (T) -> T,
-): T {
-    ・・・
-}
-//}
-//list[Preferences DataStoreを使うタイプ][Preferences DataStoreを使うタイプ]{
+==== Preferences DataStoreを使ってウィジェットの状態を更新する
+updateAppWidgetState(Preferences DataStore版)は以下の引数を取ります。
+//list[updateAppWidgetState(Preferences DataStore版)][updateAppWidgetState(Preferences DataStore版)]{
 suspend fun updateAppWidgetState(
     context: Context,
     glanceId: GlanceId,
@@ -242,8 +234,8 @@ suspend fun updateAppWidgetState(
 }
 //}
 
-Preferences DataStoreを使ってデータ更新を行う一番シンプルなサンプルコードは以下のようになります。
-//list[Preferences DataStoreを使った更新サンプル][Preferences DataStoreを使った更新サンプル]{
+Preferences DataStoreを使ってデータ更新を行うシンプルなサンプルコードは以下のようになります。
+//list[Preferences DataStoreを使ったデータの更新][Preferences DataStoreを使ったデータの更新]{
 private suspend fun updateWidget(context: Context){
     val manager = GlanceAppWidgetManager(context)
     val glanceIds = manager.getGlanceIds(GlanceAppWidgetSample::class.java)
@@ -256,65 +248,172 @@ private suspend fun updateWidget(context: Context){
 }
 //}
 
-セットしたデータを取り出すにはComposable関数の中で以下を呼び出すだけです。
-//list[Preferences DataStoreを使ったデータ取得サンプル][Preferences DataStoreを使ったデータ取得サンプル]{
+セットしたデータはCompositionLocalから取得できます。
+//list[Preferences DataStoreを使ったデータの取得][Preferences DataStoreを使ったデータの取得]{
 val prefs = currentState<Preferences>()
 val string: String = prefs[stringPreferencesKey("key_name")]
 //}
 
+==== Proto DataStoreを使ってウィジェットの状態を更新する
+updateAppWidgetState(Proto DataStore版)は以下の引数を取ります。
 
-=== 何を使ってトリガーを引く？ ここに決定木みたいなの
-手動更新のみでOK → クリックイベントの中で更新
-一日1回でOK → onUpdate に 処理を書いてupdatePeriodMillis でOK？？
-30分に1回 → WorkManagerが良さそう？ もしくは updatePeriodMillis でも
-WorkManagerは最短15分？？
-5分に1回 → AlarmManager
-それより高頻度 BroadcastIntentを投げる
-もしくは CoroutineのDelayで 自身の更新
+//list[updateAppWidgetState(Proto DataStore版)][updateAppWidgetState(Proto DataStore版)]{
+suspend fun <T> updateAppWidgetState(
+    context: Context,
+    definition: GlanceStateDefinition<T>,
+    glanceId: GlanceId,
+    updateState: suspend (T) -> T,
+): T {
+    ・・・
+}
+//}
+GlanceStateDefinition<T>は、型パラメータに保存するデータ型を取るinterfaceです。
+そのため、GlanceStateDefitinitionを実装したクラスを作成する必要があります。
 
-高速更新は正直そもそもウィジェットに必要なさそう。
-あるとしたら秒時計とか？
-いずれの場合にも手動更新ボタンを用意しておくのが良さそうです。
+//list[GlanceStateDefitinitionの実装][GlanceStateDefitinitionの実装]{
+object GlanceAppSampleStateDefinition : GlanceStateDefinition<SampleState> {
 
-==== 手動更新
+    private const val DATA_STORE_FILENAME = "sampleState"
+    private val Context.datastore by dataStore(DATA_STORE_FILENAME, SampleStateSerializer)
 
-==== xmlに書いた時間で更新する
-updatePeriodMillis に指定する。でもこれは最低30分（要ソース）これを使うのが行儀がよいと思われる、けど実際にはもっと高頻度で更新したかったりする
+    override suspend fun getDataStore(context: Context, fileKey: String): DataStore<SampleState> {
+        return context.datastore
+    }
 
-==== 自分でupdateをかける
+    override fun getLocation(context: Context, fileKey: String): File {
+        return context.dataStoreFile(DATA_STORE_FILENAME)
+    }
+}
 
-==== WorkManager
-アプリの状態に依存せずに処理を継続できるという点で、これが一番行儀よくできそう。
-公式のサンプルアプリもこれを使っている。
+@Serializable
+sealed interface SampleState {
+    @Serializable
+    object Loading : SampleState
+
+    @Serializable
+    data class Success(
+        val displayString: String,
+    ) : SampleState
+
+    @Serializable
+    data class Error(val message: String) : SampleState
+}
+//}
+
+Proto DataStoreを使って、先程定義したSampleState.Success状態にデータ更新を行うシンプルなサンプルコードは以下のようになります。
+通常のJetpackComposeにおけるUI状態更新でよく見るような書き方ができることがわかるかと思います。
+//list[Proto DataStoreを使ったデータの更新][Proto DataStoreを使ったデータの更新]{
+private suspend fun setWidgetStateSuccess(context: Context) {
+    val manager = GlanceAppWidgetManager(context)
+    val glanceIds = manager.getGlanceIds(GlanceAppWidgetSample::class.java)
+    glanceIds.forEach { glanceId ->
+        updateAppWidgetState(
+            context = context,
+            definition = GlanceAppSampleStateDefinition,
+            glanceId = glanceId,
+            updateState = { SampleState.Success(displayString = "セットしたい文字列") }
+        )
+    }
+    GlanceAppWidgetSample().updateAll(context)
+}
+//}
+
+セットしたデータを取り出すにはstateDefinitionに先ほどのGlanceStateDefitinitionを実装したクラスを指定し、CompositonLocalから取得できます。
+//list[Proto DataStoreを使ったデータの取得][Proto DataStoreを使ったデータの取得]{
+class GlanceAppWidgetSample : GlanceAppWidget() {
+
+    override val stateDefinition = GlanceAppSampleStateDefinition
+    @Composable
+    override fun Content() {
+        val sampleState = currentState<SampleState>()
+        ・・・
+    }
+}
+//}
+
+=== 更新トリガー
+データ更新の仕方を見てきました。続いて、更新処理のトリガーを引く方法を見ていきます。
+
+○章でメタデータファイルとしてwidget_meta_data.xmlを作成しましたが、属性の一つにupdatePeriodMillisがあり、更新の時間を指定することができます。指定した時間の周期でGlanceAppWidgetReceiverのonUpdate()がコールされるため、更新処理をonUpdate()内に記述することで定期的な更新が可能です。
+しかし、updatePeriodMillisの最小値は1800000（=30分）に制限されているため、それより高頻度のデータ更新が必要な場合は、WorkManagerやAlarmManagerを使用して周期的処理を実装する必要があります。
+
+データの更新タイミングはアプリの要件や仕様によるところが大きく、またGlanceに限った話ではありませんが主に以下の使い分けが考えられます。
+ * 手動更新のみでOK
+ ** → クリックイベントで更新
+ * 一日1回〜30分に1回の頻度で更新
+ ** → updatePeriodMillisで指定
+ * 30分〜15分に1回の頻度で更新
+ ** → WorkManagerを使用（WorkManagerで指定できる繰り返し処理の最短周期は15分のため）
+ * 15分〜5分に1回の頻度で更新
+ ** → AlarmManager（AlarmManagerで指定できる繰り返し処理の最短周期は5分のため）
+ * 5分に1回より高頻度
+ ** → CoroutinesのDelayなどでWhile的に更新
+
+そもそも高頻度で更新が必要なものは、バッテリー消費などの観点からウィジェットとして表示するのに相応しいのかどうか？というのはおいておいて、頻度に応じてトリガーを使い分けましょう。
+ただ、いずれの場合にもユーザーが任意のタイミングで情報を更新できるように手動更新ボタンを設置しておくのが望ましいでしょう。
+updatePeriodMillisによる更新も、正確にこの周期で実行されることが保証されているわけではないため注意が必要です。
+
+==== onUpdate(), onEnabled(), onDisabled()
+updatePeriodMillisで指定した周期でGlanceAppWidgetReceiverのonUpdate()が呼ばれると説明しましたが、他にもウィジェットの状態に応じて呼ばれるメソッドがあるため説明します。
+
+===== onUpdate()
+ウィジェットがホーム画面に追加されたとき、updatePeriodMillisで指定した周期
+
+===== onEnabled()
+ウィジェットがホーム画面に追加されたとき
+
+===== onDisabled()
+ウィジェットがホーム画面から削除されたとき
+
+これらはGlance特有ではなく従来のウィジェット実装と同様のため、既存のドキュメントを参照するのが正確です。
+https://developer.android.com/guide/topics/appwidgets?hl=ja#AppWidgetProvider
 
 
-Receiverがいる。ということはBroadCastintentをなげまくってなんとかできる
+== ウィジェットのサイズに応じたレイアウト変更
+レスポンシブなレイアウトであればウィジェットのサイズが変わっても動的に対応できますが、
+ウィジェットのサイズによって、表示するレイアウトごと（Composable関数ごと）変更したいケースの対応方法です。
 
-=== 落とし穴 …でもないか、要件次第かな？？？
-==== 落とし穴① AlarmManager
-最短5秒
+以下のように、GlanceAppWidgetを継承したクラスのsizeModeをoverrideしDpSizeのセットを指定することで現在のサイズを取得することができます。
+//list[ウィジェットのサイズに応じたレイアウト変更][ウィジェットのサイズに応じたレイアウト変更]{
+class GlanceAppWidgetSample : GlanceAppWidget() {
 
-==== 落とし穴②
-BroadcastIntentでも秒間10回までが限度？？？これはもっと研究するか
+    companion object {
+        private val smallMode = DpSize(160.dp, 160.dp)
+        private val mediumMode = DpSize(200.dp, 200.dp)
+        private val largeMode = DpSize(240.dp, 240.dp)
+    }
 
+    override val sizeMode: SizeMode = SizeMode.Responsive(
+        setOf(smallMode, mediumMode, largeMode)
+    )
 
-== ウィジェットの高度な機能
+    @Composable
+    override fun Content() {
+        val size = LocalSize.current
+        when (size) {
+            smallMode -> {
+                Text(text = "smallMode")
+            }
+            mediumMode -> {
+                Text(text = "mediumMode")
+            }
+            largeMode -> {
+                Text(text = "largeMode")
+            }
+        }
+    }
+}
+//}
 
-=== ウィジェットのサイズ変更を検知してレイアウト変更
+== リファレンス
 
-widgetManager.getAppWidgetInfo でなんかSizeが取れそう？？
+GlanceはRemoteViewsをラップしているものなので、内部の仕組みとしては既存のウィジェットの仕組みが生きています。
+そのため従来のウィジェットのドキュメントも有用です。
+https://developer.android.com/develop/ui/views/appwidgets
 
-=== 複数のウィジェットの考慮
-
-
-
-== その他Tips
-
-onEnabled
-
-unUpdate
-
-onDisabled
+公式のウィジェットサンプルアプリです。
+特にProto DataStoreを利用したデータ更新やウィジェットのサイズに応じた画面表示の切り替えなどはブログ記事などでもあまり言及されていないため、実装時にはこれを見るべきです。
+https://github.com/android/user-interface-samples/tree/main/AppWidget
 
 
 
