@@ -54,7 +54,8 @@ onNodeにはマッチャー（後述）を指定することができます。ha
 
 //list[AssertionError][AssertionError]{
 java.lang.AssertionError: Failed to perform isDisplayed check.
-Reason: Expected exactly '1' node but could not find any node that satisfies: (Text + EditableText contains 'Hello' (ignoreCase: false))
+Reason: Expected exactly '1' node but could not find any node that satisfies:
+ (Text + EditableText contains 'Hello' (ignoreCase: false))
 //}
 
 onNodeにはuseUnmergedTree引数にtrueを設定することでマージされていないノードツリーから検索することができます。この引数は例えばButtonのようなツリーでマージされる要素に対して有効です。
