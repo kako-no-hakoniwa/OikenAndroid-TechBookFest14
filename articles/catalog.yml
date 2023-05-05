@@ -5,6 +5,7 @@ CHAPS:
   - article_start_ui_testing_compose.re
 
 APPENDIX:
+  - bib.re
 
 POSTDEF:
   - contributors.re
