@@ -209,7 +209,7 @@ debugImplementation("androidx.compose.ui:ui-test-manifest:1.4.0")
 val composeTestRule = createAndroidComposeRule<ComponentActivity>()
 
 @Test
-fun test() {
+fun `AndroidComposeTestRuleのテスト`() {
     composeTestRule.setContent {
         MyAppTheme {
             HelloCompose()
@@ -254,7 +254,7 @@ Counter()コンポーザブルはアクティビティが再生成された場�
 val composeTestRule = createComposeRule()
     
 @Test
-fun test() {
+fun `状態の復元をチェックするテスト`() {
     val restorationTester = StateRestorationTester(composeTestRule)
 
     restorationTester.setContent {
@@ -310,7 +310,7 @@ fun setUpNavHost() {
 
 //list[navigationTest][navigationTest.kt]{
 @Test
-fun navigation_performLogin_navigateToCounter() {
+fun `ログイン後カウンター画面に遷移しているかチェックするテスト`() {
     composeTestRule
         .onNode(hasText("Login"))
         .performClick()
