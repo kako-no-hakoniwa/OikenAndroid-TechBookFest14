@@ -1,23 +1,24 @@
 = Glanceで遊ぼう
 
-この章ではAndroidのウィジェット開発を簡単にしてくれるJetpack
+この章ではAndroidのウィジェット開発を簡単にしてくれるJetpack Glanceについて説明します。
 
 == Glanceって何？
-Glanceは、Androidデバイスのホーム画面上に配置できるウィジェットを、Jetpack Composeの記法で書くことができるライブラリです。
-2023年5月現在はまだアルファ版ですが、従来の作り方よりも簡単にウィジェットを作ることが可能です。
+Glanceは、Androidデバイスのホーム画面上に配置できるウィジェットをJetpack Composeの記法を使って開発できるライブラリです。
 
-従来のウィジェット開発ではRemoteViewを直接用いて実装する必要がありました。またクリックイベントはすべてIntentを発行して制御する必要があるなど、開発が煩雑になる部分がありました。
+従来のウィジェット開発では、RemoteViewsを直接用いて実装する必要があり、またクリックイベントはすべてIntentを発行して制御する必要があるなど、開発が煩雑になる部分がありました。
+Glanceでは、ComposableをRemoteViewsに変換してくれるため、直接RemoteViewsを意識する必要がなく、クリックイベントもコールバックの形で書けるなど、実装が容易になっています。
 
-GlanceではComposableをRemoteViewに変換してくれるため直接RemoteViewを意識する必要がなく、またクリックイベントもコールバックの形で書けるなど非常に実装しやすくなっています。
+現在（2023年5月現在）はまだアルファ版ですが、従来の作り方よりも簡単にウィジェットを作成することが可能です。
 
-=== Jetpack Composeの記法が利用できる
-Glanceを使うと、ウィジェット開発においてJetpack Composeの記法を利用できます。
-しかし、「記法を利用できる」というのは、Composable関数として記述することが可能なことを指していますが、普段のJetpack Composeと全く同じように書けるというわけではありません。
+=== Jetpack Composeの記法を使えるとはどういうことか
+Glanceを使うことで、ウィジェット開発においてJetpack Composeの記法を活用することができます。
+ただし、「記法を利用できる」とは、Composable関数としての記述が可能であるという意味であり、通常のJetpack Composeと完全に同じ方法で記述できるわけではありません。
 
-例えば普段馴染みのあるModifierはGlanceでは使えず、代わりにGlanceModifierというものを使います。
-また、状態の変更に応じて表示内容を差分更新してくれる仕組み（Recompose）はなく、イベント的に画面全体を更新するイメージです。
+例えば、一般的によく使われるModifierはGlanceでは使用できず、その代わりにGlanceModifierが提供されています。
+また、表示内容の差分更新を行うRecomposeのような仕組みは存在せず、イベントに基づいて画面全体を更新するという考え方が適用されています。
 
-これらの前提はありつつも、すでにJetpack Composeを導入しているプロジェクトであれば同じ書き方で書けることは非常にメリットがあり、また従来のウィジェット開発の経験がなくても簡単に書ける点
+しかしこれらの前提を理解した上で、既にJetpack Composeを導入しているプロジェクトでは同様の記述方法でコーディングができるという点は大変有益です。
+さらに、従来のウィジェット開発経験がなくても簡単に記述することができるという利点があります。
 
 == 環境構築
 プロジェクトのbuild.gradleファイルにGlanceの依存関係を追加します。（@<list>{build.gradle})
@@ -45,15 +46,14 @@ android {
 
 Glanceは専用のComposeを使うため、通常のJetpack Composeの依存関係の追加は不要です。
 
-== Glanceを利用したシンプルなウィジェットの構築 Hello World
-まずは画面更新などを考えない、シンプルなウィジェットでHello Worldしてみましょう。
+== Glanceを利用したシンプルなウィジェットの構築：Hello World
+まずは、画面更新などの要素を考慮せず、シンプルなウィジェットを用いてHello Worldを実現してみましょう。
 
-GlanceではGlanceAppWidgetとGlanceAppWidgetReceiverというクラスが主要な登場人物です
-これらを継承したクラスを実装していきます。
+Glanceでは、GlanceAppWidgetとGlanceAppWidgetReceiverというクラスが主要な役割を担っています。これらのクラスを継承したカスタムクラスを実装していくことで、ウィジェットを作成していきます。
+
 
 === GlanceAppWidgetの作成
-まずは、GlanceAppWidgetクラスを継承したカスタムウィジェットクラスを作成します。
-content()メソッドにおなじみの@Composableアノテーションがついており、ここにウィジェットのUIを記述します。
+まずはじめに、GlanceAppWidgetクラスを継承したカスタムウィジェットクラスを作成しましょう。content()メソッドには、おなじみの@Composableアノテーションが付与されており、ここにウィジェットのUIを記述します。
 
 //list[GlanceAppWidget][GlanceAppWidgetを継承してComposableを記述]{
 import androidx.compose.runtime.Composable
@@ -68,14 +68,13 @@ class GlanceAppWidgetSample : GlanceAppWidget() {
     }
 }
 //}
-通常のJetpack Composeも導入しているプロジェクトの場合、使用しているコンポーネントがGlance用のものになっているかどうかに注意が必要です。
-今回の場合、Textコンポーネントがandroidx.glance.text.Textであることを確認してください。
-
+通常のJetpack Composeも導入しているプロジェクトでは、使用しているコンポーネントがGlance用のものであるかどうか注意が必要です。
+今回の例では、Textコンポーネントがandroidx.glance.text.Textであることを確認してください。
 
 === GlanceAppWidgetReceiverの作成
-GlanceAppWidgetReceiverはウィジェットのアップデートイベントを始めとした各種イベントを受け取るためのクラスです。
-BroadcastReceiverを継承しています。
-ウィジェットを表示させるためには最低限以下の記述が必要です。先程作成したGlanceAppWidgetを継承したクラスを指定します。
+GlanceAppWidgetReceiverは、ウィジェットのアップデートイベントをはじめとした各種イベントを受け取るためのクラスであり、これはBroadcastReceiverを継承しています。
+ウィジェットを表示させるためには、最低限以下の記述が必要です。先ほど作成したGlanceAppWidgetを継承したクラスを指定してください。
+
 //list[GlanceAppWidgetReceiver][GlanceAppWidgetReceiverを継承しglanceAppWidgetをoverride]{
 import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.GlanceAppWidgetReceiver
@@ -87,11 +86,13 @@ class GlanceAppWidgetReceiverSample : GlanceAppWidgetReceiver() {
 }
 //}
 
-=== メタデータファイルの作成
-※属性は公式ドキュメントを参照 https://developer.android.com/develop/ui/views/appwidgets#AppWidgetProviderInfo
 
-ウィジェットの設定や動作に関する情報を定義するためにXMLでメタデータファイルを作成する必要があります。
-本当にHello Worldとしてただウィジェットを表示するだけであれば属性は一つも指定しなくても問題ありませんが、ここではある程度最低限の指定をしていきましょう。
+=== メタデータファイルの作成
+※属性については公式ドキュメントを参照してください：https://developer.android.com/develop/ui/views/appwidgets#AppWidgetProviderInfo
+
+ウィジェットの設定や動作に関する情報を定義するために、XMLでメタデータファイルを作成する必要があります。
+単にウィジェットを表示するだけであれば属性を指定せずとも問題ありませんが、ここでは基本的な要素の指定を行いましょう。
+
 //list[metadata][widget_meta_data]{
 <?xml version="1.0" encoding="utf-8"?>
 <appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
@@ -107,8 +108,8 @@ class GlanceAppWidgetReceiverSample : GlanceAppWidgetReceiver() {
 
 === AndroidManifestに追記
 
-前述の通り、GlanceAppWidgetReceiverはBroadcastReceiverを継承しているため、忘れずにAndoridManifestにReceiver登録します。
-また先ほど作成したメタデータファイルもあわせて記述します。
+前述の通り、GlanceAppWidgetReceiverはBroadcastReceiverを継承しているため、忘れずにAndoridManifestにReceiver登録をしましょう。
+また、先ほど作成したメタデータファイルもあわせて記述します。
 
 //list[AndroidManifest][AndroidManifest.xml]{
 <receiver
@@ -129,32 +130,38 @@ class GlanceAppWidgetReceiverSample : GlanceAppWidgetReceiver() {
 ここに画像
 Hello Glance!!
 
+Glanceを利用してシンプルなウィジェットを構築する方法を解説しました。これを基本として、さらに複雑なウィジェットや独自の機能を追加していくことができます。
+
 == ウィジェットの表示をカスタムする方法
 ここからはウィジェットの表示をカスタムしていきましょう。
 
 === GlanceModifier
-通常のJetpack ComposeでUIを作成する際、Modifierを使用して要素のレイアウトやスタイルを変更することが一般的です。
-ただし、GlanceではModifierは直接利用できず、代わりにGlanceModifierというものを使います。基本的な使い方はModifierと同じなのですが、用意されている属性に限りがあるため、通常のModifierと同じようにレイアウトを組めない場合があります。
+通常のJetpack Composeでは、UIの作成においてModifierを使って要素のレイアウトやスタイルを変更するのが一般的です。しかし、GlanceではModifierを直接使用することができず、代わりにGlanceModifierを使用します。
+基本的な使い方はModifierと同じですが、利用できる属性に制限があるため、通常のModifierと同じようなレイアウトは組めないことがあります。
 
-☆ 参照 https://developer.android.com/reference/kotlin/androidx/glance/GlanceModifier#extension-functions_1
+☆ 参照: https://developer.android.com/reference/kotlin/androidx/glance/GlanceModifier#extension-functions_1
 
-また、通常のComposeではRowであればhorizontalArrangement、ColumnであればverticalArrangementと、引数にArrangementを取りますがGlanceのRowとColumnはhorizontalもverticalもAlignmentしか引数に取りません。
-そのためArrangement.SpaceArroundやArrangement.SpaceBetweenなどを指定した要素の配置は現状できません。
-RowScopeで用意されているGlanceModifierにweight()はなくdefaultWeight()しかいないため、自由にweightを指定することができません。
+さらに、通常のComposeではRowでhorizontalArrangement、ColumnでverticalArrangementという引数を取りますが、GlanceのRowとColumnはhorizontalとverticalの引数としてAlignmentしか取りません。
+そのため、Arrangement.SpaceAroundやArrangement.SpaceBetweenなどを指定して要素を配置することは現状できません。
+また、RowScopeで提供されているGlanceModifierにはweight()がなく、defaultWeight()しかないため、自由にweightを指定することができません。
 
-などといった制約はありますが、それでも
+といったこれらの制約はありますが、基本的なレイアウトとスタイリングは実現可能です。
 
 ここでコラム的な枠
 ☆間違ってModifierを使ったりするとこうなる
 エラーの画像
-Modifierを始めとした通常のComposeのコンポーネントを誤って使ってしまった場合、エラーメッセージが表示されることがあります。このような場合は、Glanceで利用できるコンポーズ要素や属性について調べ、適切な方法で表示をカスタマイズするようにしましょう。
+Modifierを始めとした通常のComposeのコンポーネントを誤って使ってしまった場合を含め、
+エラー時にはウィジェットにエラーメッセージが表示されます。このような場合は、Glanceで利用できるコンポーズ要素や属性について調べ、適切な方法で表示をカスタマイズするようにしましょう。
+
 
 === リスト表示
-LazyColumnが使えます。（ただしパッケージはandroidx.glance）
-LazyRowはまだありません。
+GlanceではLazyColumnが使用できますが、パッケージは androidx.glance になります。
+これにより、縦方向のリスト表示を実現することができます。
+
+ただし、現時点ではLazyRowは利用できないため注意が必要です。
 
 === 画像の表示
-普通のComposeと同じように書けます（ただし使うものはandroidx.glance.ImageKtです）
+Glanceでは通常のComposeと同様に画像を表示することができます。（ただし使うものはandroidx.glance.ImageKtです）
 //list[ImageKt][画像の表示]{
 Image(
     provider = ImageProvider(
@@ -170,9 +177,10 @@ Image(
 GlanceModifier.clickableを使うことでクリック時の処理を指定することができます。
 clickableはandroidx.glance.action.ActionというInterfaceを引数に取るため、Actionを実装することで処理を記述できます。
 
+
 ==== Activityの起動
-いくつかのActionは予め用意されています。
-Activityの起動にはactionStartActivity()を使います。
+いくつかのアクションが予め用意されており、Activityの起動には actionStartActivity() を使います。
+
 //list[Activityの起動][Activityの起動]{
 Box(
     modifier = GlanceModifier.clickable(actionStartActivity<MainActivity>())
@@ -180,8 +188,8 @@ Box(
     }
 //}
 
-またBroadcast送信にはactionSendBroadcast()、Serviceの起動にはactionStartServece()が用意されています。
-
+さらに、Broadcastの送信には actionSendBroadcast() を、Serviceの起動には actionStartService() を使用できます。
+これらのアクションを使って、ウィジェットをタップした際にアプリケーション内でさまざまな操作を実行することができます。
 
 ==== 独自Actionの起動
 独自のクリックアクションを定義するには、行いたい処理をActionCallbackを継承したクラスに記述し、そのクラスを actionRunCallback に型パラメータとして渡すことで実現できます。
@@ -189,6 +197,7 @@ Box(
 Box(
     modifier = GlanceModifier.clickable(actionRunCallback<SampleAction>())
     ) {
+        ・・・
     }
 
 class SampleAction : ActionCallback {
@@ -226,8 +235,8 @@ DataStore自体にはPreferences DataStoreとProto　DataStoreの2種類があ�
 具体的には、androidx.glance.appwidget.state.GlanceAppWidgetStateKt#updateAppWidgetState()というメソッドが引数違いでPreferences DataStoreとProto　DataStore版のそれぞれが用意されています。
 
 ==== Preferences DataStoreを使ってウィジェットの状態を更新する
-updateAppWidgetState(Preferences DataStore版)は以下の引数を取ります。
-//list[updateAppWidgetState(Preferences DataStore版)][updateAppWidgetState(Preferences DataStore版)]{
+updateAppWidgetState（Preferences DataStore版）は以下の引数を取ります。
+//list[updateAppWidgetState(Preferences DataStore版)][updateAppWidgetState（Preferences DataStore版）]{
 suspend fun updateAppWidgetState(
     context: Context,
     glanceId: GlanceId,
@@ -258,9 +267,9 @@ val string: String = prefs[stringPreferencesKey("key_name")]
 //}
 
 ==== Proto DataStoreを使ってウィジェットの状態を更新する
-updateAppWidgetState(Proto DataStore版)は以下の引数を取ります。
+updateAppWidgetState（Proto DataStore版）は以下の引数を取ります。
 
-//list[updateAppWidgetState(Proto DataStore版)][updateAppWidgetState(Proto DataStore版)]{
+//list[updateAppWidgetState(Proto DataStore版)][updateAppWidgetState（Proto DataStore版）]{
 suspend fun <T> updateAppWidgetState(
     context: Context,
     definition: GlanceStateDefinition<T>,
@@ -303,8 +312,8 @@ sealed interface SampleState {
 }
 //}
 
-Proto DataStoreを使って、先程定義したSampleState.Success状態にデータ更新を行うシンプルなサンプルコードは以下のようになります。
-通常のJetpackComposeにおけるUI状態更新でよく見るような書き方ができることがわかるかと思います。
+Proto DataStoreを使って、先ほど定義したSampleState.Success状態にデータ更新を行うシンプルなサンプルコードは以下のようになります。
+通常のComposeにおけるUI状態更新でよく見るような書き方ができます。
 //list[Proto DataStoreを使ったデータの更新][Proto DataStoreを使ったデータの更新]{
 private suspend fun setWidgetStateSuccess(context: Context) {
     val manager = GlanceAppWidgetManager(context)
@@ -335,26 +344,30 @@ class GlanceAppWidgetSample : GlanceAppWidget() {
 //}
 
 === 更新トリガー
-データ更新の仕方を見てきました。続いて、更新処理のトリガーを引く方法を見ていきます。
+これまでデータの更新方法を説明してきました。次に、更新処理をトリガーする方法について見ていきましょう。
 
-○章でメタデータファイルとしてwidget_meta_data.xmlを作成しましたが、属性の一つにupdatePeriodMillisがあり、更新の時間を指定することができます。指定した時間の周期でGlanceAppWidgetReceiverのonUpdate()がコールされるため、更新処理をonUpdate()内に記述することで定期的な更新が可能です。
-しかし、updatePeriodMillisの最小値は1800000（=30分）に制限されているため、それより高頻度のデータ更新が必要な場合は、WorkManagerやAlarmManagerを使用して周期的処理を実装する必要があります。
+○章で、widget_meta_data.xmlというメタデータファイルを作成しました。
+その中にある属性の一つであるupdatePeriodMillisを使用して、ウィジェットの更新周期を指定できます。
+指定した周期でGlanceAppWidgetReceiverのonUpdate()が呼び出されるため、更新処理をonUpdate()内に記述することで定期的な更新が実現できます。
+ただし、updatePeriodMillisの最小値は1800000（=30分）に制限されており、より高頻度のデータ更新が必要な場合は、WorkManagerやAlarmManagerを使用して周期的な処理を実装する必要があります。
 
-データの更新タイミングはアプリの要件や仕様によるところが大きく、またGlanceに限った話ではありませんが主に以下の使い分けが考えられます。
+データの更新タイミングはアプリの要件や仕様に依存しますが、一般的に以下のような使い分けが考えられます。
+
  * 手動更新のみでOK
- ** → クリックイベントで更新
+ ** クリックイベントで更新
  * 一日1回〜30分に1回の頻度で更新
- ** → updatePeriodMillisで指定
+ ** updatePeriodMillisで指定
  * 30分〜15分に1回の頻度で更新
- ** → WorkManagerを使用（WorkManagerで指定できる繰り返し処理の最短周期は15分のため）
+ ** WorkManagerを使用（WorkManagerで指定できる繰り返し処理の最短周期は15分のため）
  * 15分〜5分に1回の頻度で更新
- ** → AlarmManager（AlarmManagerで指定できる繰り返し処理の最短周期は5分のため）
+ ** AlarmManager（AlarmManagerで指定できる繰り返し処理の最短周期は5分のため）
  * 5分に1回より高頻度
- ** → CoroutinesのDelayなどでWhile的に更新
+ ** CoroutinesのDelayなどを使用してループ処理的に更新
 
-そもそも高頻度で更新が必要なものは、バッテリー消費などの観点からウィジェットとして表示するのに相応しいのかどうか？というのはおいておいて、頻度に応じてトリガーを使い分けましょう。
-ただ、いずれの場合にもユーザーが任意のタイミングで情報を更新できるように手動更新ボタンを設置しておくのが望ましいでしょう。
-updatePeriodMillisによる更新も、正確にこの周期で実行されることが保証されているわけではないため注意が必要です。
+updatePeriodMillisによる更新は、指定された周期で正確に実行されることが保証されていない*ため、注意が必要です。
+高頻度の更新が必要なウィジェットでは、バッテリー消費も考慮して適切なトリガーを選択しましょう。
+
+また、どの場合でも、ユーザーがいつでも情報を更新できるように手動更新ボタンを設置することが望ましいです。
 
 ==== onUpdate(), onEnabled(), onDisabled()
 updatePeriodMillisで指定した周期でGlanceAppWidgetReceiverのonUpdate()が呼ばれると説明しましたが、他にもウィジェットの状態に応じて呼ばれるメソッドがあるため説明します。
@@ -373,10 +386,10 @@ https://developer.android.com/guide/topics/appwidgets?hl=ja#AppWidgetProvider
 
 
 == ウィジェットのサイズに応じたレイアウト変更
-レスポンシブなレイアウトであればウィジェットのサイズが変わっても動的に対応できますが、
-ウィジェットのサイズによって、表示するレイアウトごと（Composable関数ごと）変更したいケースの対応方法です。
+レスポンシブなレイアウトであればウィジェットのサイズが変わっても動的に対応できますが、それでは適切な表示を維持できない場合や、表示する要素数を変えたい場合があります。
+ここではウィジェットのサイズによって表示するレイアウトごと（Composable関数ごと）変更する方法を説明します。
 
-以下のように、GlanceAppWidgetを継承したクラスのsizeModeをoverrideしDpSizeのセットを指定することで現在のサイズを取得することができます。
+以下のように、GlanceAppWidgetを継承したクラスのsizeModeをoverrideしDpSizeのセットを指定することで、CompositionLocalから現在のサイズを取得することができます。
 //list[ウィジェットのサイズに応じたレイアウト変更][ウィジェットのサイズに応じたレイアウト変更]{
 class GlanceAppWidgetSample : GlanceAppWidget() {
 
@@ -408,31 +421,38 @@ class GlanceAppWidgetSample : GlanceAppWidget() {
 }
 //}
 
-== リファレンス
-
-GlanceはRemoteViewsをラップしているものなので、内部の仕組みとしては既存のウィジェットの仕組みが生きています。
-そのため従来のウィジェットのドキュメントも有用です。
-
-https://developer.android.com/develop/ui/views/appwidgets
-
-公式のウィジェットサンプルアプリです。
-
-https://github.com/android/user-interface-samples/tree/main/AppWidget
-
-
 == おまけ Glanceでミニゲーム
 
-ここまでの内容をもとに、ウィジェットでミニゲームを作ってみたいと思います。
-電池消費や画面描画の遅さ、またホーム画面でそれを行う意義などを考えるとウィジェットでミニゲームを作ることはまったく実用的ではありませんが、ただのロマンです。
-ただ、ミニゲームが作れるのであれば大抵の作りたいものは作れるのではないでしょうか。
-
-===　ゲームの概要
-前方からAndroidロボット*が次々降ってくるのでそれを集めるゲームです。
+ここまでの内容を元に、ウィジェットでミニゲームを作成してみました。
+このミニゲームは、前方から次々に降ってくるAndroidロボット*を集めるゲームです。
+Androidロボットのイメージは、Androidのロゴマークでよく使われているものです。
 https://developer.android.com/distribute/marketing-tools/brand-guidelines?hl=ja#android_robot
 
+ただし、ウィジェットでミニゲームを作成すること自体は、バッテリー消費の問題や画面描画の遅さ、またホーム画面でそれを行う意義などを考えると実用的な意味があるわけではありません。（ただのロマンです。）
 
-ここにgithubのリンクを貼ればいいかなあ
+このミニゲームのコードは、以下のGitHubリポジトリで公開されています。興味のある方は、ぜひチェックしてみてください。
+（リポジトリのリンクをここに挿入）
 
-===　まとめ
-この記事では、Jetpack ComposeのGlanceを使ったウィジェット開発について紹介しました。Glanceを使えば、Jetpack Composeの記法でウィジェットを作成できるため、開発者にとってより効率的な開発が可能です。
+==　まとめ
+この記事では、Jetpack Glanceを使ったウィジェット開発について解説しました。
+Glanceを利用することで、Jetpack Composeの記法でウィジェットを作成することができ、開発者はより効率的にウィジェットを開発できます。
+また、Jetpack Composeの多様な機能を活用することで、ウィジェットの操作性や見た目を向上させることができます。
 
+これらの機能を活かして、自分だけのオリジナルウィジェットを開発してみてはいかがでしょうか。
+
+
+== リファレンス
+参考となるドキュメントやリンクの紹介です。
+
+ * Android Developers: Glance
+https://developer.android.com/jetpack/androidx/releases/glance
+
+ * Android Developers: Create a simple widget
+https://developer.android.com/develop/ui/views/appwidgets
+GlanceはRemoteViewsをラップしているものなので、内部の仕組みとしては既存のウィジェットの仕組みが生きています。
+従来のウィジェットのドキュメントも有用です。
+
+
+ * android/user-interface-samples/AppWidget
+https://github.com/android/user-interface-samples/tree/main/AppWidget
+公式のウィジェットサンプルです。やはり公式のサンプルコードを見るのが一番です。
