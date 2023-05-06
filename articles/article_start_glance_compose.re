@@ -73,7 +73,7 @@ class GlanceAppWidgetSample : GlanceAppWidget() {
 
 === GlanceAppWidgetReceiverの作成
 GlanceAppWidgetReceiverは、ウィジェットのアップデートイベントをはじめとした各種イベントを受け取るためのクラスであり、これはBroadcastReceiverを継承しています。
-ウィジェットを表示させるためには、最低限以下の記述が必要です。先ほど作成したGlanceAppWidgetを継承したクラスを指定してください。
+ウィジェットを表示させるためには、最低限次の記述が必要です。先ほど作成したGlanceAppWidgetを継承したクラスを指定してください。
 
 //list[GlanceAppWidgetReceiver][GlanceAppWidgetReceiverを継承しglanceAppWidgetをoverride]{
 import androidx.glance.appwidget.GlanceAppWidget
@@ -235,7 +235,7 @@ DataStore自体にはPreferences DataStoreとProto　DataStoreの2種類があ�
 具体的には、androidx.glance.appwidget.state.GlanceAppWidgetStateKt#updateAppWidgetState()というメソッドが引数違いでPreferences DataStoreとProto　DataStore版のそれぞれが用意されています。
 
 ==== Preferences DataStoreを使ってウィジェットの状態を更新する
-updateAppWidgetState（Preferences DataStore版）は以下の引数を取ります。
+updateAppWidgetState（Preferences DataStore版）は次の引数を取ります。
 //list[updateAppWidgetState(Preferences DataStore版)][updateAppWidgetState（Preferences DataStore版）]{
 suspend fun updateAppWidgetState(
     context: Context,
@@ -246,7 +246,7 @@ suspend fun updateAppWidgetState(
 }
 //}
 
-Preferences DataStoreを使ってデータ更新を行うシンプルなサンプルコードは以下のようになります。
+Preferences DataStoreを使ってデータ更新を行うシンプルなサンプルコードは次のとおりです。
 //list[Preferences DataStoreを使ったデータの更新][Preferences DataStoreを使ったデータの更新]{
 private suspend fun updateWidget(context: Context){
     val manager = GlanceAppWidgetManager(context)
@@ -267,7 +267,7 @@ val string: String = prefs[stringPreferencesKey("key_name")]
 //}
 
 ==== Proto DataStoreを使ってウィジェットの状態を更新する
-updateAppWidgetState（Proto DataStore版）は以下の引数を取ります。
+updateAppWidgetState（Proto DataStore版）は次の引数を取ります。
 
 //list[updateAppWidgetState(Proto DataStore版)][updateAppWidgetState（Proto DataStore版）]{
 suspend fun <T> updateAppWidgetState(
@@ -312,7 +312,7 @@ sealed interface SampleState {
 }
 //}
 
-Proto DataStoreを使って、先ほど定義したSampleState.Success状態にデータ更新を行うシンプルなサンプルコードは以下のようになります。
+Proto DataStoreを使って、先ほど定義したSampleState.Success状態にデータ更新を行うシンプルなサンプルコードは次のとおりです。
 通常のComposeにおけるUI状態更新でよく見るような書き方ができます。
 //list[Proto DataStoreを使ったデータの更新][Proto DataStoreを使ったデータの更新]{
 private suspend fun setWidgetStateSuccess(context: Context) {
@@ -351,7 +351,7 @@ class GlanceAppWidgetSample : GlanceAppWidget() {
 指定した周期でGlanceAppWidgetReceiverのonUpdate()が呼び出されるため、更新処理をonUpdate()内に記述することで定期的な更新が実現できます。
 ただし、updatePeriodMillisの最小値は1800000（=30分）に制限されており、より高頻度のデータ更新が必要な場合は、WorkManagerやAlarmManagerを使用して周期的な処理を実装する必要があります。
 
-データの更新タイミングはアプリの要件や仕様に依存しますが、一般的に以下のような使い分けが考えられます。
+データの更新タイミングはアプリの要件や仕様に依存しますが、一般的に次のような使い分けが考えられます。
 
  * 手動更新のみでOK
  ** クリックイベントで更新
@@ -389,7 +389,7 @@ https://developer.android.com/guide/topics/appwidgets?hl=ja#AppWidgetProvider
 レスポンシブなレイアウトであればウィジェットのサイズが変わっても動的に対応できますが、それでは適切な表示を維持できない場合や、表示する要素数を変えたい場合があります。
 ここではウィジェットのサイズによって表示するレイアウトごと（Composable関数ごと）変更する方法を説明します。
 
-以下のように、GlanceAppWidgetを継承したクラスのsizeModeをoverrideしDpSizeのセットを指定することで、CompositionLocalから現在のサイズを取得することができます。
+次のように、GlanceAppWidgetを継承したクラスのsizeModeをoverrideしDpSizeのセットを指定することで、CompositionLocalから現在のサイズを取得することができます。
 //list[ウィジェットのサイズに応じたレイアウト変更][ウィジェットのサイズに応じたレイアウト変更]{
 class GlanceAppWidgetSample : GlanceAppWidget() {
 
