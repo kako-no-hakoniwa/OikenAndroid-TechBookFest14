@@ -26,7 +26,7 @@ Glanceを使うことで、ウィジェット開発においてJetpack Compose�
 
 
 == 環境構築
-プロジェクトのbuild.gradleファイルにGlanceの依存関係を追加します。（@<list>{build.gradle})
+プロジェクトのbuild.gradleファイルにGlanceの依存関係を追加します。
 //list[build.gradle][build.gradle]{
 dependencies {
     implementation "androidx.glance:glance-appwidget:1.0.0-alpha05"
@@ -113,7 +113,7 @@ class GlanceAppWidgetReceiverSample : GlanceAppWidgetReceiver() {
 
 === AndroidManifestに追記
 
-前述の通り、@<code>{GlanceAppWidgetReceiver}は@<code>{BroadcastReceiver}を継承しているため、忘れずにAndoridManifestにReceiver登録をしましょう。
+前述のとおり、@<code>{GlanceAppWidgetReceiver}は@<code>{BroadcastReceiver}を継承しているため、忘れずにAndoridManifestにReceiver登録をしましょう。
 また、先ほど作成したメタデータファイルもあわせて記述します。
 
 //list[AndroidManifest][AndroidManifest.xml]{
@@ -130,7 +130,7 @@ class GlanceAppWidgetReceiverSample : GlanceAppWidgetReceiver() {
 //}
 
 === ビルドしてみよう
-ビルドが完了したら、実機またはエミュレーターでアプリを起動し、ホーム画面に作成したウィジェットを追加してみましょう。正しく設定されていれば、ウィジェットに"Hello, Glance!"というテキストが表示されるはずです。
+ビルドが完了したら、実機またはエミュレータでアプリを起動し、ホーム画面に作成したウィジェットを追加してみましょう。正しく設定されていれば、ウィジェットに"Hello, Glance!"というテキストが表示されるはずです。
 
 ☆☆☆ここに画像
 Hello Glance!!
@@ -353,8 +353,8 @@ GlanceAppWidgetSample().updateAll(context)
 === 更新トリガー
 これまでデータの更新方法を説明してきました。次に、更新処理をトリガーする方法について見ていきましょう。
 
-前述の通り、ウィジェットの構築にあたりwidget_meta_data.xmlというメタデータファイルを作成しました。
-その中にある属性の一つである@<code>{updatePeriodMillis}を使用して、ウィジェットの更新周期を指定できます。
+前述のとおり、ウィジェットの構築にあたりwidget_meta_data.xmlというメタデータファイルを作成しました。
+その中にある属性のひとつである@<code>{updatePeriodMillis}を使用して、ウィジェットの更新周期を指定できます。
 指定した周期で@<code>{GlanceAppWidgetReceiver}の@<code>{onUpdate()}が呼び出されるため、更新処理を@<code>{onUpdate()}内に記述することで定期的な更新が実現できます。
 ただし、@<code>{updatePeriodMillis}の最小値は1800000（=30分）に制限されており、より高頻度のデータ更新が必要な場合は、WorkManager@<fn>{source_workmanager}やAlarmManager@<fn>{source_alarmmanager}を使用して周期的な処理を実装する必要があります。
 
