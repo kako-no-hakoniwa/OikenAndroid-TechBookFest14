@@ -8,17 +8,17 @@ Glanceは、Androidデバイスのホーム画面上に配置できるウィジ�
 従来のウィジェット開発では、@<code>{RemoteViews}@<fn>{source_remoteviews}を直接用いて実装する必要があり、またクリックイベントはすべて@<code>{Intent}を発行して制御する必要があるなど、開発が煩雑になる部分がありました。
 Glanceでは、Composableを@<code>{RemoteViews}に変換してくれるため、直接@<code>{RemoteViews}を意識する必要がなく、クリックイベントもコールバックの形で書けるなど、実装が容易になっています。
 
-現在（2023年5月現在）はまだアルファ版@<fn>{source_glance_release}ですが、従来の作り方よりも簡単にウィジェットを作成することが可能です。
+現在（2023年5月現在）はまだアルファ版@<fn>{source_glance_release}ですが、従来の作り方よりも簡単にウィジェットを作成できます。
 
 === Jetpack Composeの記法を使えるとはどういうことか
-Glanceを使うことで、ウィジェット開発においてJetpack Composeの記法を活用することができます。
+Glanceを使うことで、ウィジェット開発においてJetpack Composeの記法を活用できます。
 ただし、「記法を利用できる」とは、Composable関数としての記述が可能であるという意味であり、通常のJetpack Composeと完全に同じ方法で記述できるわけではありません。
 
-例えば、一般的によく使われる@<code>{Modifier}はGlanceでは使用できず、その代わりに@<code>{GlanceModifier}が提供されています。
+たとえば、一般的によく使われる@<code>{Modifier}はGlanceでは使用できず、その代わりに@<code>{GlanceModifier}が提供されています。
 また、表示内容の差分のみRecompose@<fn>{source_recompose}してくれるような仕組みは存在せず、イベントに基づいて画面全体を更新するという考え方が適用されています。
 
-しかしこれらの前提を理解した上で、既にJetpack Composeを導入しているプロジェクトでは同様の記述方法でコーディングができるという点は大変有益です。
-さらに、従来のウィジェット開発経験がなくても簡単に記述することができるという利点があります。
+しかしこれらの前提を理解した上で、すでにJetpack Composeを導入しているプロジェクトでは同様の記述方法でコーディングができるという点は大変有益です。
+さらに、従来のウィジェット開発経験がなくても簡単に記述できるという利点があります。
 
 //footnote[source_remoteviews][https://developer.android.com/reference/android/widget/RemoteViews]
 //footnote[source_glance_release][https://developer.android.com/jetpack/androidx/releases/glance#1.0.0-alpha05]
@@ -141,15 +141,15 @@ Glanceを利用してシンプルなウィジェットを構築する方法を�
 ここからはウィジェットの表示をカスタムしていきましょう。
 
 === GlanceModifier
-通常のJetpack Composeでは、UIの作成において@<code>{Modifier}を使って要素のレイアウトやスタイルを変更するのが一般的です。しかし、Glanceでは@<code>{Modifier}を直接使用することができず、代わりに@<code>{GlanceModifier}を使用します。
+通常のJetpack Composeでは、UIの作成において@<code>{Modifier}を使って要素のレイアウトやスタイルを変更するのが一般的です。しかし、Glanceでは@<code>{Modifier}を直接使用できず、代わりに@<code>{GlanceModifier}を使用します。
 基本的な使い方は@<code>{Modifier}と同じですが、利用できる属性に制限がある@<fn>{source_glance_modifier}ため、通常の@<code>{Modifier}と同じようなレイアウトは組めないことがあります。
 
 他、注意すべき点をいくつか説明します。
 通常のComposeでは@<code>{Row}は@<code>{horizontalArrangement}、@<code>{Column}は@<code>{verticalArrangement}を引数に取りますが、Glanceの@<code>{Row}と@<code>{Column}はhorizontalとverticalの引数として@<code>{Alignment}しか取りません。
 そのため、@<code>{Arrangement.SpaceAround}や@<code>{Arrangement.SpaceBetween}などを指定して要素を配置することは現状できません。
-また、@<code>{RowScope}で提供されている@<code>{GlanceModifier}には@<code>{weight()}がなく@<code>{defaultWeight()}しかないため、自由にweightを指定することができません。
+また、@<code>{RowScope}で提供されている@<code>{GlanceModifier}には@<code>{weight()}がなく@<code>{defaultWeight()}しかないため、自由にweightを指定できません。
 
-・・・と、いくつか注意すべき制約はありますが、それでも基本的なレイアウトとスタイリングは十分に実現可能です。
+・・・と、いくつか注意すべき制約はありますが、それでも基本的なレイアウトとスタイリングは十分に実現できます。
 
 ===[column] 間違って通常のComposeのModifierを使うと・・・
 Modifierを始めとした、通常のComposeのコンポーネントを誤って使ってしまった場合はエラーになりウィジェットが正しく表示されません。
@@ -166,7 +166,7 @@ Modifierを始めとした、通常のComposeのコンポーネントを誤っ�
 Glanceでも@<code>{LazyColumn}が使用できます。ただし、現時点では@<code>{LazyRow}は利用できないため注意が必要です。
 
 === 画像の表示
-Glanceでも通常のComposeと同様に画像を表示することができます。
+Glanceでも通常のComposeと同様に画像を表示できます。
 //list[ImageKt][画像の表示]{
 Image(
     provider = ImageProvider(
@@ -179,7 +179,7 @@ Image(
 
 
 === クリックアクションの追加
-@<code>{GlanceModifier.clickable}を使うことでクリック時の処理を指定することができます。
+@<code>{GlanceModifier.clickable}を使うことでクリック時の処理を指定できます。
 @<code>{clickable}は@<code>{androidx.glance.action.Action}というinterfaceを引数に取ります。この@<code>{Action}を実装することで処理を記述できます。
 
 ==== Activityの起動
@@ -342,8 +342,8 @@ class GlanceAppWidgetSample : GlanceAppWidget() {
 GlanceAppWidgetSample().update(context, id)
 //}
 
-引数の@<code>{id}はウィジェットの識別idです。ウィジェットは複数作成することができ、それぞれにidが存在します。
-例えば前述のActionCallBackの@<code>{onAction()}には引数としてidが渡ってくるため、そのidを使ってタップされたウィジェットのみ更新が可能です。
+引数の@<code>{id}はウィジェットの識別idです。ウィジェットはホーム画面上に複数作成でき、それぞれにidが存在します。
+例えば前述のActionCallBackの@<code>{onAction()}には引数としてidが渡ってくるため、そのidを使ってタップされたウィジェットのみ更新できます。
 idを意識しない場合は@<code>{updateAll(context)}も使えます。すべてのウィジェットに反映すべきデータの更新ではこちらを使います。
 
 //list[手動更新updateAll(context)][updateAll(context)]{
@@ -402,7 +402,7 @@ updatePeriodMillisで指定した周期でGlanceAppWidgetReceiverのonUpdate()�
 レスポンシブなレイアウトであればウィジェットのサイズが変わっても動的に対応できますが、それでは適切な表示を維持できない場合や、表示する要素数を変えたい場合があります。
 ここではウィジェットのサイズによって表示するレイアウトごと（Composable関数ごと）変更する方法を説明します。
 
-次のように、@<code>{GlanceAppWidget}を継承したクラスの@<code>{sizeMode}をoverrideし、@<code>{DpSize}のセットを指定することで、CompositionLocalから現在のサイズを取得することができます。
+次のように、@<code>{GlanceAppWidget}を継承したクラスの@<code>{sizeMode}をoverrideし、@<code>{DpSize}のセットを指定することで、CompositionLocalから現在のサイズを取得できます。
 //list[ウィジェットのサイズに応じたレイアウト変更][ウィジェットのサイズに応じたレイアウト変更]{
 class GlanceAppWidgetSample : GlanceAppWidget() {
 
@@ -450,7 +450,7 @@ Glanceを使ったウィジェット開発について解説しました。
 ☆☆☆ここに画像
 
 
-コードは以下のGitHubリポジトリで公開されています。興味のある方は、ぜひチェックしてみてください。
+コードは次のGitHubリポジトリで公開されています。興味のある方は、ぜひチェックしてみてください。
 
 ☆☆☆（リポジトリのリンクをここに挿入）
 
