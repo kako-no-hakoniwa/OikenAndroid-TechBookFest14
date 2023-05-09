@@ -106,9 +106,9 @@ Gradleはルートプロジェクトのgradleフォルダ内にある@<code>{lib
 ==== デフォルトのカタログファイル以外を使用する
 
 デフォルトの@<code>{libs.versions.toml}ファイル以外のファイル名でカタログを追加する場合は、ビルドファイルの変更が必要です。
-次は@<code>{apps.versions.toml}というファイルから@<code>{apps}という名前のカタログを使用する場合の例です。
+次は@<code>{apps.versions.toml}というファイル名でカタログを追加する場合の例です。
 
-//list[VersionCatalog7][apps.versions.tomlというファイルから apps というカタログを宣言する（settings.gradle）][groovy]{
+//list[VersionCatalog7][appsカタログの宣言（settings.gradle）][groovy]{
 dependencyResolutionManagement {
     versionCatalogs {
         apps {
@@ -117,6 +117,8 @@ dependencyResolutionManagement {
     }
 }
 //}
+
+使用する側は、appsという名前でバージョンカタログを参照できます。
 
 //list[VersionCatalog8][使用する側は apps という名前で参照することが可能][groovy]{
 dependencies {
@@ -209,7 +211,7 @@ versionCode versionCode
 
 versionsセクションは、依存関係やプラグインで参照されるバージョンを定義するセクションです。
 同じバージョンを参照する複数のエイリアスがある場合にとくに有用で、versionsセクションに共有しているバージョンを定義すれば、1箇所で管理するだけでOKになります。
-次は、Lifecycleライブラリ@<code>{lifecycle}での例です。
+次は、Lifecycleライブラリ@<fn>{lifecycle}での例です。
 
 //footnote[lifecycle][https://developer.android.com/jetpack/androidx/releases/lifecycle?hl=ja]
 
@@ -291,7 +293,7 @@ androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version
 //}
 
 また、BOMが提供されているライブラリの場合も宣言可能です。
-次は、Compose@<fn>{compose}のBOMを使用した例です。
+次に示すのは、Compose@<fn>{compose}のBOMを使用した例です。
 
 //footnote[compose][https://developer.android.com/jetpack/androidx/releases/compose?hl=ja]
 
@@ -321,14 +323,17 @@ lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-viewmodel
 lifecycle = ["lifecycle-viewmodel-ktx", "lifecycle-viewmodel-compose"]
 //}
 
-//list[VersionCatalog19][bundlesを使用しない場合（2つの依存関係を追加するには2行記載する必要がある）][groovy]{
+bundlesを使用しない場合には、2つの依存関係を追加するために2行記載する必要があります。
+一方、bundlesを使用すれば1行の記載でOKです。
+
+//list[VersionCatalog19][bundlesを使用しない場合][groovy]{
 dependencies {
     implementation libs.lifecycle.viewmodel.ktx
     implementation libs.lifecycle.viewmodel.compose
 }
 //}
 
-//list[VersionCatalog20][bundlesを使用する場合（2つの依存関係を追加するのに1行の記載でOK）][groovy]{
+//list[VersionCatalog20][bundlesを使用する場合][groovy]{
 dependencies {
     implementation libs.bundles.lifecycle
 }
@@ -337,7 +342,7 @@ dependencies {
 ==== pluginsセクション
 
 pluginsセクションは、プラグインを定義するセクションです。
-ライブラリがGAV座標で表されるのに対し、Gradleプラグインはidとバージョンで識別されます。
+ライブラリがGAV座標で表されるのに対し、Gradleプラグインはidとバージョンで識別されるので宣言の仕方が少し異なります。
 
 //list[VersionCatalog21][libs.versions.toml][toml]{
 [plugins]
@@ -388,9 +393,7 @@ Renovateは更新できるバージョンがある場合にプルリクエスト
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
-    "config:base"
-  ],
-  "timezone": "Asia/Tokyo",
+    "confi: "Asia/Tokyo",です。
   "schedule": ["after 10am and before 5pm on monday"]
 }
 //}
