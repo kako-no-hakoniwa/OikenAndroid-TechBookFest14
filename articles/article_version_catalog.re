@@ -309,7 +309,7 @@ androidx-compose-ui-tooling = { module = "androidx.compose.ui:ui-tooling" }
 
 bundlesセクションは、複数の依存関係を1つにして定義できるセクションです。
 よく一緒に使用するライブラリをまとめておけば、個別に複数の依存関係を追加する必要がなくなります。
-たとえば、@<code>{lifecycle-viewmodel-ktx}と@<code>{lifecycle-viewmodel-compose}を一緒に使用する場合には下記のように定義しておくと便利です。
+たとえば、@<code>{lifecycle-viewmodel-ktx}と@<code>{lifecycle-viewmodel-compose}を一緒に使用する場合には次のように定義しておくと便利です。
 
 //list[VersionCatalog18][libs.versions.toml][toml]{
 [versions]
