@@ -359,7 +359,10 @@ plugins {
 
 Android Studio GiraffeからTOMLファイルで定義した依存関係が古い場合には警告表示がされるようになり、以前より依存関係の更新に気づきやすくなりました。
 しかし、プロジェクトの依存関係更新を自動化するツールを導入するとより効率的に対応できます。
-今回は、Version Catalogに対応しているRenovateの導入について紹介します。
+今回は、Version Catalogに対応しているRenovate@<fn>{renovate}の導入について紹介します。@<fn>{dependabot}
+
+//footnote[renovate][https://www.mend.io/renovate/]
+//footnote[dependabot][そのほか、Version Catalogに対応している依存関係更新自動化ツールにDependabotがあります。https://github.blog/changelog/2023-03-13-dependabot-version-updates-keeps-gradle-version-catalogs-up-to-date/]
 
 === Renovateの導入
 
