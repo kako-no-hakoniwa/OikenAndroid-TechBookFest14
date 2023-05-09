@@ -1,4 +1,4 @@
-= Version Catalogを使ったバージョンを一元管理する
+= Version Catalogを使って依存関係を一元管理する
 
 == はじめに
 
@@ -6,7 +6,7 @@
 
 現在のおいしい健康では、ライブラリのバージョン管理に@<code>{ext}ブロック（Gradleのextraプロパティ）を使用しています。
 しかし、@<code>{ext}ブロックを使用する方法ではAndroid Studioで定義ジャンプや補完が効かないなどの不便な点があります。
-加えて、おいしい健康ではライブラリの定期的なバージョン更新を効率よく進められていない問題もありました。
+加えて、おいしい健康ではライブラリの定期的なバージョン更新を効率良く進められていない問題もありました。
 そこで、ライブラリのバージョン管理方法をVersion Catalogへ移行し、プロジェクトの依存関係を自動更新できるツールと連携しようと対応中です。
 今回はその中で得られた知見を共有します。
 
@@ -164,12 +164,12 @@ dependencies {
 //footnote[alias-dash][https://docs.gradle.org/8.1.1/userguide/platforms.html#sub:central-declaration-of-dependencies:~:text=Aliases must consist of a series of identifiers separated by a dash (-%2C recommended)%2C an underscore (_) or a dot (.).]
 
 //table[table1][有効なエイリアスと生成されるアクセサ例]{
-有効なエイリアス  生成されるアクセサ
+有効なエイリアス    生成されるアクセサ
 --------------------------------------------
-hoge             hoge
-hoge-fuga        hoge.fuga 
-hoge-fuga1       hoge.fuga1 
-hoge.fuga.piyo   hoge.fuga.piyo 
+hoge    hoge
+hoge-fuga   hoge.fuga 
+hoge-fuga1  hoge.fuga1 
+hoge.fuga.piyo  hoge.fuga.piyo 
 //}
 
 大文字小文字の区別についてですが、Gradle公式ではできれば小文字@<fn>{alias-lowercase}としています。
@@ -182,16 +182,14 @@ hoge.fuga.piyo   hoge.fuga.piyo
 //footnote[alias-kebabcase2][https://developer.android.com/studio/build/migrate-to-catalogs?hl=ja#:~:text=依存関係と同様に、ビルドファイル内でより適切にコード補完を支援するための plugins ブロック カタログ エントリの推奨形式は、ケバブケース（android-application など）です。]
 
 //table[table2][有効なエイリアスと生成されるアクセサ例]{
-有効なエイリアス  生成されるタイプセーフなアクセサ
+有効なエイリアス    生成されるアクセサ
 --------------------------------------------
-version-code     version.code
-versionCode      versionCode 
+version-code    version.code
+versionCode versionCode 
 //}
 
 //image[image1][Android Studioでの補完]{
 //}
-
-Android Studioでの補完
 
 また、予約語があるので一部のキーワード（@<code>{extensions}、@<code>{class}など）はエイリアスとして使うことはできません@<fn>{alias-reserved}。
 
