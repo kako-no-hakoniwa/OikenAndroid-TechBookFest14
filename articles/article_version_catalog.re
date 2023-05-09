@@ -6,11 +6,11 @@
 
 現在のおいしい健康では、ライブラリのバージョン管理に@<code>{ext}ブロック（Gradleのextraプロパティ）を使用しています。
 しかし、@<code>{ext}ブロックを使用する方法ではAndroid Studioで定義ジャンプや補完が効かないなどの不便な点があります。
-加えて、おいしい健康ではライブラリの定期的なバージョン更新を効率良く進められていない問題もありました。
-そこで、ライブラリのバージョン管理方法をVersion Catalogへ移行し、プロジェクトの依存関係自動更新ツールと連携しようと対応中です。
+加えて、おいしい健康ではライブラリの定期的なバージョン更新を効率よく進められていない問題もありました。
+そこで、ライブラリのバージョン管理方法をVersion Catalogへ移行し、プロジェクトの依存関係を自動更新できるツールと連携しようと対応中です。
 今回はその中で得られた知見を共有します。
 
-なお、この章で使用する各バージョンは下記の通りです。
+なお、この章で使用する各バージョンは次のとおりです。
 
  * Android Studio Giraffe 2022.3.1 Beta 1
  ** 一部、過去バージョンとの比較でAndroid Studio Flamingo 2022.2.1 Patch 1を使用
@@ -28,7 +28,7 @@ Gradle 7.0でfeature previewとして導入された機能@<fn>{gradle-7.0}で�
 
 === バージョンを一元管理する理由
 
-ライブラリの依存関係やプラグインの一元管理は、プロジェクトがマルチモジュール構成の時にとくに恩恵を受けることができます。
+ライブラリの依存関係やプラグインの一元管理は、プロジェクトがマルチモジュール構成のときにとくに恩恵を受けることができます。
 build.gradleにベタ書きする方法を採用しているマルチモジュール環境の場合、複数のモジュールで使用されているライブラリをアップデートする際に、ライブラリを使用しているモジュールすべてで更新作業をする必要があります。
 抜け漏れが発生する可能性が容易に考えられます。
 
@@ -38,7 +38,7 @@ dependencies {
 }
 //}
 
-一方、バージョンを一元管理している場合には、定義をしている1箇所のファイルで更新を行うだけでOKなのでメンテナンス性が高いといえるでしょう。
+一方、バージョンを一元管理している場合には、定義をしている1箇所のファイルで更新するだけでOKなのでメンテナンス性が高いといえるでしょう。
 
 //list[VersionCatalog2][Version Catalogで一元管理する場合（定義側）][toml]{
 [libraries]
@@ -106,7 +106,7 @@ Gradleはルートプロジェクトのgradleフォルダ内にある@<code>{lib
 ==== デフォルトのカタログファイル以外を使用する
 
 デフォルトの@<code>{libs.versions.toml}ファイル以外のファイル名でカタログを追加する場合は、ビルドファイルの変更が必要です。
-下記は@<code>{apps.versions.toml}というファイルから@<code>{apps}という名前のカタログを使用する場合の例です。
+次は@<code>{apps.versions.toml}というファイルから@<code>{apps}という名前のカタログを使用する場合の例です。
 
 //list[VersionCatalog7][apps.versions.tomlというファイルから apps というカタログを宣言する（settings.gradle）][groovy]{
 dependencyResolutionManagement {
@@ -157,9 +157,9 @@ dependencies {
 ==== 有効なエイリアス
 
 エイリアスはアスキー文字で構成され、数字はその後に続く必要があります。
-区切り文字には、ダッシュ（@<code>{-}）、アンダースコア（@<code>{_}）、ドット（@<code>{.}）を使用することができ、Gradle公式ではダッシュを推奨しています@<fn>{alias-dash}。
+区切り文字には、ダッシュ（@<code>{-}）、アンダースコア（@<code>{_}）、ドット（@<code>{.}）を使用でき、Gradle公式ではダッシュを推奨しています@<fn>{alias-dash}。
 宣言したエイリアスから生成されるカタログ（型安全なアクセサ）は、ダッシュ、アンダースコア、ドットのいずれの区切り文字を使用していたとしても自動的にドットに変換されます。
-下記は、有効なエイリアスと生成されるタイプセーフなアクセサの例です。
+次は、有効なエイリアスと生成されるタイプセーフなアクセサの例です。
 
 //footnote[alias-dash][https://docs.gradle.org/8.1.1/userguide/platforms.html#sub:central-declaration-of-dependencies:~:text=Aliases must consist of a series of identifiers separated by a dash (-%2C recommended)%2C an underscore (_) or a dot (.).]
 
@@ -200,7 +200,7 @@ Android Studioでの補完
 === カタログファイルのセクション
 
 カタログファイルで定義する依存関係やプラグインですが、決まったセクションで宣言する必要があります。
-下記の4つのセクションがあるので、それぞれ見ていきましょう。
+次の4つのセクションがあるので、それぞれ見ていきましょう。
 
  1. versions: 依存関係やプラグインで参照されるバージョンを定義するセクション
  2. libraries: 依存関係を定義するセクション
@@ -211,7 +211,7 @@ Android Studioでの補完
 
 versionsセクションは、依存関係やプラグインで参照されるバージョンを定義するセクションです。
 同じバージョンを参照する複数のエイリアスがある場合にとくに有用で、versionsセクションに共有しているバージョンを定義すれば、1箇所で管理するだけでOKになります。
-下記は、Lifecycleライブラリ@<code>{lifecycle}での例です。
+次は、Lifecycleライブラリ@<code>{lifecycle}での例です。
 
 //footnote[lifecycle][https://developer.android.com/jetpack/androidx/releases/lifecycle?hl=ja]
 
@@ -293,7 +293,7 @@ androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version
 //}
 
 また、BOMが提供されているライブラリの場合も宣言可能です。
-下記は、Compose@<fn>{compose}のBOMを使用した例です。
+次は、Compose@<fn>{compose}のBOMを使用した例です。
 
 //footnote[compose][https://developer.android.com/jetpack/androidx/releases/compose?hl=ja]
 
