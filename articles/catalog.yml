@@ -3,6 +3,7 @@ PREDEF:
 
 CHAPS:
   - article.re
+  - article_version_catalog.re
 
 APPENDIX:
 
