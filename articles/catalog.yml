@@ -2,7 +2,9 @@ PREDEF:
   - preface.re
 
 CHAPS:
+  - article.re
   - article_start_ui_testing_compose.re
+  - article_start_glance_compose.re
 
 APPENDIX:
   - bib.re
