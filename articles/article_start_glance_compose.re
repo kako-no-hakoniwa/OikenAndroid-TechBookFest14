@@ -190,7 +190,7 @@ Box(
 Box(
     modifier = GlanceModifier.clickable(actionRunCallback<SampleAction>())
     ) {
-        ・・・
+        ...
     }
 
 class SampleAction : ActionCallback {
@@ -222,7 +222,7 @@ suspend fun updateAppWidgetState(
     glanceId: GlanceId,
     updateState: suspend (MutablePreferences) -> Unit,
 ) {
-    ・・・
+    ...
 }
 //}
 
@@ -258,7 +258,7 @@ suspend fun <T> updateAppWidgetState(
     glanceId: GlanceId,
     updateState: suspend (T) -> T,
 ): T {
-    ・・・
+    ...
 }
 //}
 @<code>{GlanceStateDefinition<T>}は、型パラメータに保存するデータ型を取るinterfaceです。
@@ -320,7 +320,7 @@ class GlanceAppWidgetSample : GlanceAppWidget() {
     @Composable
     override fun Content() {
         val sampleState = currentState<SampleState>()
-        ・・・
+        ...
     }
 }
 //}
