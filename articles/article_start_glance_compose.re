@@ -1,8 +1,8 @@
-= Glanceで遊ぼう
+= Glanceでウィジェットを作ろう
 
-この章ではAndroidのウィジェット開発を簡単にしてくれるJetpack Glanceについて説明します。
+この章ではAndroidのウィジェット開発を簡単にしてくれるGlanceについて説明します。
 
-== Glanceって何？
+== Glanceとは
 Glanceは、Androidデバイスのホーム画面上に配置できるウィジェットをJetpack Composeの記法を使って開発できるライブラリです。
 
 従来のウィジェット開発では、@<code>{RemoteViews}@<fn>{source_remoteviews}を直接用いて実装する必要があり、またクリックイベントはすべて@<code>{Intent}を発行して制御する必要があるなど、開発が煩雑になる部分がありました。
@@ -15,7 +15,7 @@ Glanceを使うことで、ウィジェット開発においてJetpack Compose�
 ただし、「記法を利用できる」とは、Composable関数としての記述が可能であるという意味であり、通常のJetpack Composeと完全に同じ方法で記述できるわけではありません。
 
 たとえば、一般的によく使われる@<code>{Modifier}はGlanceでは使用できず、その代わりに@<code>{GlanceModifier}が提供されています。
-また、表示内容の差分のみRecompose@<fn>{source_recompose}してくれるような仕組みは存在せず、イベントに基づいて画面全体を更新するという考え方が適用されています。
+また、表示内容の差分のみ再コンポーズ@<fn>{source_recompose}してくれるような仕組みは存在せず、イベントに基づいて画面全体を更新するという考え方が適用されています。
 
 しかしこれらの前提を理解した上で、すでにJetpack Composeを導入しているプロジェクトでは同様の記述方法でコーディングができるという点は大変有益です。
 さらに、従来のウィジェット開発経験がなくても簡単に記述できるという利点があります。
@@ -149,13 +149,13 @@ Glanceを利用してシンプルなウィジェットを構築する方法を�
 そのため、@<code>{Arrangement.SpaceAround}や@<code>{Arrangement.SpaceBetween}などを指定して要素を配置することは現状できません。
 また、@<code>{RowScope}で提供されている@<code>{GlanceModifier}には@<code>{weight()}がなく@<code>{defaultWeight()}しかないため、自由にweightを指定できません。
 
-・・・と、いくつか注意すべき制約はありますが、それでも基本的なレイアウトとスタイリングは十分に実現できます。
+...と、いくつか注意すべき制約はありますが、それでも基本的なレイアウトとスタイリングは十分に実現できます。
 
 ===[column] 間違って通常のComposeのModifierを使うと・・・
-Modifierを始めとした、通常のComposeのコンポーネントを誤って使ってしまった場合はエラーになりウィジェットが正しく表示されません。
-このケースに限りませんがエラー時にはやけに親切な次のメッセージが表示されます。
+Modifierをはじめとした通常のComposeのコンポーネントを誤って使ってしまった場合など、エラー時はウィジェットが正しく表示されません。
+親切な次のメッセージが表示されます。
 ☆☆☆ここに画像
-表示に従ってlogcatを確認し、修正しましょう。
+表示にしたがってlogcatを確認し、修正しましょう。
 
 ===[/column]
 
@@ -336,7 +336,7 @@ class GlanceAppWidgetSample : GlanceAppWidget() {
 //}
 
 === ウィジェットの更新
-通常のJetpack Composeでは、引数にとったデータの変更を自動で検知しRecomposeされますが、Glanceでは手動で画面の更新を呼び出す必要があります。
+通常のJetpack Composeでは、引数にとったデータの変更を検知し再コンポーズされますが、Glanceでは手動で画面の更新を呼び出す必要があります。
 次のようにGlanceAppWidgetを継承したクラスの@<code>{update()}を呼び出します。
 //list[手動更新update(context, id)][update(context, id)]{
 GlanceAppWidgetSample().update(context, id)
