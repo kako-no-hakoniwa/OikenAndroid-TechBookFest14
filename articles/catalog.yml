@@ -3,6 +3,7 @@ PREDEF:
 
 CHAPS:
   - article.re
+  - article_start_glance_compose.re
 
 APPENDIX:
 
