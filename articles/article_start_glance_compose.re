@@ -430,29 +430,7 @@ Glanceを使ったウィジェット開発について解説しました。
 
 ぜひGlanceでウィジェットを作成して、アプリをより魅力的なものにしましょう。
 
-
-===[column] おまけ Glanceミニゲーム
-
-ここまでの内容を元に、ウィジェットでミニゲーム@<fn>{minigame}を作成してみました。
-
-このミニゲームは、前方から次々に降ってくるAndroidロボット@<fn>{source_androidrobot}を集めるゲームです。
-
-//image[glance_game][Glanceでミニゲーム][scale=0.3]{
-
-//}
-
-
-コードは次のGitHubリポジトリで公開されています。興味のある方は、ぜひチェックしてみてください。
-
-☆☆☆（リポジトリのリンクをここに挿入）
-
-//footnote[minigame][ウィジェットでミニゲームを作成すること自体は、バッテリー消費の問題や画面描画の遅さ、またホーム画面でそれを行う意義などを考えると実用的な意味があるわけではありません。（ただのロマンです。）]
-//footnote[source_androidrobot][https://developer.android.com/distribute/marketing-tools/brand-guidelines#android_robot]
-
-===[/column]
-
-
-== リファレンス
+=== リファレンス
 参考となるドキュメントやリンクの紹介です。
 
  * Android Developers: Glance@<br>{}@<href>{https://developer.android.com/jetpack/androidx/releases/glance}
@@ -460,3 +438,22 @@ Glanceを使ったウィジェット開発について解説しました。
  * GitHub: android/user-interface-samples/AppWidget@<br>{}@<href>{https://github.com/android/user-interface-samples/tree/main/AppWidget}@<br>{}公式のウィジェットサンプルです。
 
  * Android Developers: Create a simple widget@<br>{}@<href>{https://developer.android.com/develop/ui/views/appwidgets}@<br>{}GlanceはRemoteViewsをラップしているものなので、内部の仕組みとしては既存のウィジェットの仕組みが動作しています。そのため従来のウィジェットのドキュメントも有用です。
+
+===[column] おまけ Glanceミニゲーム
+
+ここまでの内容を元に、ウィジェットでミニゲーム@<fn>{minigame}を作成してみました。
+
+このミニゲームは、前方から次々に降ってくるAndroidロボット@<fn>{source_androidrobot}を集めるゲームです。
+
+//image[glance_game][Glanceでミニゲーム（開発中）][scale=0.3]{
+
+//}
+
+
+コードは次のGitHubリポジトリで公開されています。興味のある方は、ぜひチェックしてみてください。
+@<href>{https://github.com/kumokumot/GlanceGalaxyDroid}
+
+//footnote[minigame][ウィジェットでミニゲームを作成すること自体は、バッテリー消費の問題や画面描画の遅さ、またホーム画面でそれを行う意義などを考えると実用的な意味があるわけではありません。（ただのロマンです。）]
+//footnote[source_androidrobot][https://developer.android.com/distribute/marketing-tools/brand-guidelines#android_robot]
+
+===[/column]
