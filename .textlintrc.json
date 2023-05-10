@@ -1,13 +1,20 @@
 {
-  "plugins": [
-    "review"
-  ],
-  "filters": {},
+  "plugins": {
+    "review": true
+  },
+  "filters": {
+    "allowlist": {
+      "allow": [
+        "つかった"
+      ]
+    }
+  },
   "rules": {
+    "preset-ja-spacing": true,
+    "preset-ja-technical-writing": true,
     "preset-japanese": true,
     "prh": {
       "rulePaths": [
-        "prh-rules/languages/ja/typo.yml",
         "prh-rules/media/techbooster.yml"
       ]
     }
