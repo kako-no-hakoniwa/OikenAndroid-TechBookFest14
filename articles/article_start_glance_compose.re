@@ -1,6 +1,6 @@
 = Glanceでウィジェットを作ろう
 
-この章ではAndroidのウィジェット開発を簡単にしてくれるGlanceについて説明します。
+この章ではAndroidのウィジェット開発を簡単にしてくれるJetpack Glanceについて説明します。
 
 == Glanceとは
 Glanceは、Androidデバイスのホーム画面上に配置できるウィジェットをJetpack Composeの記法を使って開発できるライブラリです。
@@ -132,10 +132,9 @@ class GlanceAppWidgetReceiverSample : GlanceAppWidgetReceiver() {
 === ビルドしてみよう
 ビルドが完了したら、実機またはエミュレータでアプリを起動し、ホーム画面に作成したウィジェットを追加してみましょう。正しく設定されていれば、ウィジェットに"Hello, Glance!"というテキストが表示されるはずです。
 
-☆☆☆ここに画像
-Hello Glance!!
+//image[hello_glance][GlanceでHello World][scale=0.3]{
 
-Glanceを利用してシンプルなウィジェットを構築する方法を解説しました。これを基本として、さらに複雑なウィジェットや独自の機能を追加していくことができます。
+//}
 
 == ウィジェットの表示をカスタムする方法
 ここからはウィジェットの表示をカスタムしていきましょう。
@@ -150,15 +149,6 @@ Glanceを利用してシンプルなウィジェットを構築する方法を�
 また、@<code>{RowScope}で提供されている@<code>{GlanceModifier}には@<code>{weight()}がなく@<code>{defaultWeight()}しかないため、自由にweightを指定できません。
 
 ...と、いくつか注意すべき制約はありますが、それでも基本的なレイアウトとスタイリングは十分に実現できます。
-
-===[column] 間違って通常のComposeのModifierを使うと・・・
-Modifierをはじめとした通常のComposeのコンポーネントを誤って使ってしまった場合など、エラー時はウィジェットが正しく表示されません。
-親切な次のメッセージが表示されます。
-☆☆☆ここに画像
-表示にしたがってlogcatを確認し、修正しましょう。
-
-===[/column]
-
 
 //footnote[source_glance_modifier][https://developer.android.com/reference/kotlin/androidx/glance/GlanceModifier#extension-functions_1]
 
@@ -183,7 +173,7 @@ Image(
 @<code>{clickable}は@<code>{androidx.glance.action.Action}というinterfaceを引数に取ります。この@<code>{Action}を実装することで処理を記述できます。
 
 ==== Activityの起動
-いくつかの@<code>{Action}実装はあらかじめ用意されています。例えばActivityの起動には@<code>{actionStartActivity()}を使います。
+いくつかの@<code>{Action}実装はあらかじめ用意されています。たとえばActivityの起動には@<code>{actionStartActivity()}を使います。
 
 //list[Activityの起動][Activityの起動]{
 Box(
@@ -343,7 +333,7 @@ GlanceAppWidgetSample().update(context, id)
 //}
 
 引数の@<code>{id}はウィジェットの識別idです。ウィジェットはホーム画面上に複数作成でき、それぞれにidが存在します。
-例えば前述のActionCallBackの@<code>{onAction()}には引数としてidが渡ってくるため、そのidを使ってタップされたウィジェットのみ更新できます。
+たとえば前述のActionCallBackの@<code>{onAction()}には引数としてidが渡ってくるため、そのidを使ってタップされたウィジェットのみ更新できます。
 idを意識しない場合は@<code>{updateAll(context)}も使えます。すべてのウィジェットに反映すべきデータの更新ではこちらを使います。
 
 //list[手動更新updateAll(context)][updateAll(context)]{
@@ -392,7 +382,7 @@ updatePeriodMillisで指定した周期でGlanceAppWidgetReceiverのonUpdate()�
 ===== onDisabled()
 ウィジェットがホーム画面から削除されたとき
 
-これらはGlance特有ではなく従来のウィジェット実装と同様のため、既存のドキュメントを参照するのが正確です。
+これらはGlance特有のものではなく、従来のウィジェット実装と同様のため、既存のドキュメントを参照するのが正確です。
 @<href>{https://developer.android.com/guide/topics/appwidgets?hl=ja#AppWidgetProvider}
 
 
@@ -447,7 +437,9 @@ Glanceを使ったウィジェット開発について解説しました。
 
 このミニゲームは、前方から次々に降ってくるAndroidロボット@<fn>{source_androidrobot}を集めるゲームです。
 
-☆☆☆ここに画像
+//image[glance_game][Glanceでミニゲーム][scale=0.3]{
+
+//}
 
 
 コードは次のGitHubリポジトリで公開されています。興味のある方は、ぜひチェックしてみてください。
