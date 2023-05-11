@@ -2,7 +2,13 @@
   "plugins": {
     "review": true
   },
-  "filters": {},
+  "filters": {
+    "allowlist": {
+      "allow": [
+        "つかった"
+      ]
+    }
+  },
   "rules": {
     "preset-ja-spacing": true,
     "preset-ja-technical-writing": true,
