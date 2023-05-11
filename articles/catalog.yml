@@ -3,8 +3,8 @@ PREDEF:
 
 CHAPS:
   - article_start_ui_testing_compose.re
-  - article_start_glance_compose.re
   - article_version_catalog.re
+  - article_start_glance_compose.re
 
 APPENDIX:
   - bib.re
