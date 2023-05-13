@@ -129,7 +129,7 @@ class GlanceAppWidgetReceiverSample : GlanceAppWidgetReceiver() {
      />
 //}
 
-//footnote[source_metadata][属性一覧 @<href>{https://developer.android.com/develop/ui/views/appwidgets#AppWidgetProviderInfo}]
+//footnote[source_metadata][@<href>{https://developer.android.com/develop/ui/views/appwidgets#AppWidgetProviderInfo}]
 
 === AndroidManifestに追記
 
