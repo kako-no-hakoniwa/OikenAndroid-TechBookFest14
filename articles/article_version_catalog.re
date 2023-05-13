@@ -166,12 +166,12 @@ dependencies {
 //footnote[alias-dash][@<href>{https://docs.gradle.org/8.1.1/userguide/platforms.html#sub:central-declaration-of-dependencies}]
 
 //table[table1][有効なエイリアスと生成されるアクセサ例]{
-有効なエイリアス    生成されるアクセサ
+有効なエイリアス	生成されるアクセサ
 --------------------------------------------
-hoge    hoge
-hoge-fuga   hoge.fuga 
-hoge-fuga1  hoge.fuga1 
-hoge.fuga.piyo  hoge.fuga.piyo 
+hoge	hoge
+hoge-fuga	hoge.fuga 
+hoge-fuga1	hoge.fuga1 
+hoge.fuga.piyo	hoge.fuga.piyo 
 //}
 
 大文字小文字の区別についてですが、Gradle公式ではできれば小文字@<fn>{alias-lowercase}としています。
@@ -183,10 +183,10 @@ hoge.fuga.piyo  hoge.fuga.piyo
 //footnote[alias-kebabcase][@<href>{https://developer.android.com/studio/build/migrate-to-catalogs?hl=ja}]
 
 //table[table2][有効なエイリアスと生成されるアクセサ例]{
-有効なエイリアス    生成されるアクセサ
+有効なエイリアス	生成されるアクセサ
 --------------------------------------------
-version-code    version.code
-versionCode versionCode 
+version-code	version.code
+versionCode	versionCode 
 //}
 
 //image[image1][Android Studioでの補完]{
