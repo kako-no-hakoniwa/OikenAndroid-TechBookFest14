@@ -110,12 +110,16 @@ class GlanceAppWidgetReceiverSample : GlanceAppWidgetReceiver() {
 //list[metadata][widget_meta_data]{
 <?xml version="1.0" encoding="utf-8"?>
 <appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
-    android:previewImage="@mipmap/ic_launcher"  // ウィジェット追加時のプレビュー画像
-    android:minWidth="80dp"     // ウィジェットデフォルト幅
-    android:minHeight="80dp"    // ウィジェットデフォルト高さ
-    android:targetCellWidth="2"     // Android12以降でのデフォルトのグリッド幅
-    android:targetCellHeight="2"    // Android12以降でのデフォルトのグリッド高さ
-    android:resizeMode="horizontal|vertical"    // ウィジェット長押しでリサイズ可能な方向
+    // ウィジェット追加時のプレビュー画像
+    android:previewImage="@mipmap/ic_launcher"  
+    // ウィジェットデフォルト幅・高さ
+    android:minWidth="80dp"   
+    android:minHeight="80dp"
+    // Android12以降でのデフォルトのグリッド幅・高さ
+    android:targetCellWidth="2"
+    android:targetCellHeight="2"
+    // ウィジェット長押しでリサイズ可能な方向
+    android:resizeMode="horizontal|vertical"
      />
 //}
 
@@ -278,9 +282,11 @@ suspend fun <T> updateAppWidgetState(
 object GlanceAppSampleStateDefinition : GlanceStateDefinition<SampleState> {
 
     private const val DATA_STORE_FILENAME = "sampleState"
-    private val Context.datastore by dataStore(DATA_STORE_FILENAME, SampleStateSerializer)
+    private val Context.datastore
+            by dataStore(DATA_STORE_FILENAME, SampleStateSerializer)
 
-    override suspend fun getDataStore(context: Context, fileKey: String): DataStore<SampleState> {
+    override suspend fun getDataStore(context: Context, fileKey: String)
+            : DataStore<SampleState> {
         return context.datastore
     }
 
@@ -315,7 +321,9 @@ private suspend fun setWidgetStateSuccess(context: Context) {
             context = context,
             definition = GlanceAppSampleStateDefinition,
             glanceId = glanceId,
-            updateState = { SampleState.Success(displayString = "セットしたい文字列") }
+            updateState = { 
+                SampleState.Success(displayString = "セットしたい文字列") 
+            }
         )
     }
     GlanceAppWidgetSample().updateAll(context)
