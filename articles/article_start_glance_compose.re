@@ -223,7 +223,7 @@ class SampleAction : ActionCallback {
 
 === データの更新
 表示するためのデータの更新には、DataStore@<fn>{source_datastore}の仕組みが使われます。
-DataStore自体にはPreferences DataStoreとProto　DataStoreの2種類がありますが、そのどちらもGlanceで利用できます。
+DataStore自体にはPreferences DataStoreとProto DataStoreの2種類がありますが、そのどちらもGlanceで利用できます。
 具体的には、@<code>{androidx.glance.appwidget.state.GlanceAppWidgetStateKt#updateAppWidgetState()}というメソッドが引数違いで@<code>{Preferences DataStore}版と@<code>{Proto　DataStore}版のそれぞれ用意されています。
 
 //footnote[source_datastore][https://developer.android.com/topic/libraries/architecture/datastore]
