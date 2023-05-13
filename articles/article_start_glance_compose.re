@@ -11,7 +11,7 @@
 Glanceは、Androidデバイスのホーム画面上に配置できるウィジェットをJetpack Composeの記法を使って開発できるライブラリです。
 
 従来のウィジェット開発では、@<code>{RemoteViews}@<fn>{source_remoteviews}を直接用いて実装する必要があり、またクリックイベントはすべて@<code>{Intent}を発行して制御する必要があるなど、開発が煩雑になる部分がありました。
-Glanceでは、Composableを@<code>{RemoteViews}に変換してくれるため直接@<code>{RemoteViews}を意識する必要がなく、クリックイベントもコールバックの形で書けるなど、従来の作り方よりも簡単にウィジェットを作成できます。
+一方Glanceでは、Composableを@<code>{RemoteViews}に変換してくれるため直接@<code>{RemoteViews}を意識する必要がなく、またクリックイベントもコールバックの形で書くことができ、従来の作り方よりも簡単にウィジェットを作成できます。
 
 現在（2023年5月現在）はベータ版@<fn>{source_glance_release}です。（5/10にアルファ版からベータ版になりました。）
 
@@ -22,7 +22,7 @@ Glanceを使うことで、ウィジェット開発においてJetpack Compose�
 たとえば、一般的によく使われる@<code>{Modifier}はGlanceでは使用できず、その代わりに@<code>{GlanceModifier}が提供されています。
 また、表示内容の差分のみ再コンポーズ@<fn>{source_recompose}してくれるような仕組みは存在せず、イベントに基づいて画面全体を更新するという考え方が適用されています。
 
-しかしこれらの前提を理解した上で、すでにJetpack Composeを導入しているプロジェクトでは同様の記述方法でコーディングができるため、従来のウィジェット開発経験がなくても開発しやすいという点は大きなメリットです。
+これらの違いはありますが、すでにJetpack Composeを導入しているプロジェクトでは同様の記述方法でコーディングができるため、従来のウィジェット開発経験がなくても開発しやすいという点は大きなメリットです。
 
 //footnote[source_remoteviews][https://developer.android.com/reference/android/widget/RemoteViews]
 //footnote[source_glance_release][https://developer.android.com/jetpack/androidx/releases/glance#version_100_2]
@@ -30,7 +30,9 @@ Glanceを使うことで、ウィジェット開発においてJetpack Compose�
 
 
 == 環境構築
-プロジェクトのbuild.gradleファイルにGlanceの依存関係を追加します。
+
+ここからは実際にGlanceを試してみましょう。
+まずはプロジェクトのbuild.gradleファイルにGlanceの依存関係を追加します。
 //list[build.gradle][build.gradle]{
 dependencies {
     implementation "androidx.glance:glance-appwidget:1.0.0-beta01"
@@ -64,8 +66,8 @@ Glanceでは、@<code>{GlanceAppWidget}と@<code>{GlanceAppWidgetReceiver}とい
 
 === GlanceAppWidgetの作成
 まずはじめに、@<code>{GlanceAppWidget}クラスを継承したカスタムウィジェットクラスを作成しましょう。
-@<code>{GlanceAppWidget}クラスには抽象メソッドとして@<code>{provideGlance(context: Context, id: GlanceId)}が定義されているためoverrideし、
-その中で@<code>{provideContent(content: @Composable @GlanceComposable () -> Unit)}を呼び出しComposable関数を渡します。
+@<code>{GlanceAppWidget}クラスには抽象メソッドとして定義されている@<code>{provideGlance}をoverrideし、
+その中で@<code>{provideContent}を呼び出しComposable関数を渡します。
 
 //list[GlanceAppWidget][GlanceAppWidgetを継承してComposableを記述]{
 import androidx.compose.runtime.Composable
@@ -89,7 +91,7 @@ class GlanceAppWidgetSample : GlanceAppWidget() {
 
 === GlanceAppWidgetReceiverの作成
 @<code>{GlanceAppWidgetReceiver}は、ウィジェットのアップデートイベントをはじめとした各種イベントを受け取るためのクラスであり、これは@<code>{BroadcastReceiver}を継承しています。
-ウィジェットを表示させるためには、最低限次の記述が必要です。先ほど作成した@<code>{GlanceAppWidget}を継承したクラスを指定してください。
+ウィジェットを表示させるためには最低限、次の記述が必要です。先ほど作成した@<code>{GlanceAppWidget}を継承したクラスを指定してください。
 
 //list[GlanceAppWidgetReceiver][GlanceAppWidgetReceiverを継承しglanceAppWidgetをoverride]{
 import androidx.glance.appwidget.GlanceAppWidget
@@ -110,14 +112,18 @@ class GlanceAppWidgetReceiverSample : GlanceAppWidgetReceiver() {
 //list[metadata][widget_meta_data]{
 <?xml version="1.0" encoding="utf-8"?>
 <appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
+
     // ウィジェット追加時のプレビュー画像
     android:previewImage="@mipmap/ic_launcher"  
+
     // ウィジェットデフォルト幅・高さ
     android:minWidth="80dp"   
     android:minHeight="80dp"
+
     // Android12以降でのデフォルトのグリッド幅・高さ
     android:targetCellWidth="2"
     android:targetCellHeight="2"
+
     // ウィジェット長押しでリサイズ可能な方向
     android:resizeMode="horizontal|vertical"
      />
@@ -401,6 +407,7 @@ updatePeriodMillisで指定した周期でGlanceAppWidgetReceiverのonUpdate()�
 ウィジェットがホーム画面から削除されたとき
 
 これらはGlance特有のものではなく、従来のウィジェット実装と同様のため、既存のドキュメントを参照するのが正確です。
+
 @<href>{https://developer.android.com/guide/topics/appwidgets?hl=ja#AppWidgetProvider}
 
 
@@ -442,11 +449,11 @@ class GlanceAppWidgetSample : GlanceAppWidget() {
 }
 //}
 
-==　まとめ
+== まとめ
 Glanceを使ったウィジェット開発について解説しました。
 今までウィジェットを作ったことがない人でも、これまでに説明してきた内容で基本的なウィジェットは問題なく作成できる気がしてきたのではないでしょうか。
 
-ぜひGlanceでウィジェットを作成して、アプリをより魅力的なものにしましょう。
+ぜひGlanceでウィジェットを作成して、アプリをより魅力的なものにしていきましょう。
 
 === リファレンス
 参考となるドキュメントやリンクの紹介です。
