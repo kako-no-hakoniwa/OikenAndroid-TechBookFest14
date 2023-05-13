@@ -40,7 +40,8 @@ dependencies {
 //list[VersionCatalog2][Version Catalogで一元管理する場合（定義側）][toml]{
 [libraries]
 androidx-appcompat = { 
-    module = "androidx.appcompat:appcompat", version = "1.6.1"
+    module = "androidx.appcompat:appcompat",
+    version = "1.6.1"
 }
 //}
 
@@ -75,7 +76,8 @@ androidx-core = "1.9.0"
 
 [libraries]
 androidx-core-ktx = { 
-    module = "androidx.core:core-ktx", version.ref = "androidx-core"
+    module = "androidx.core:core-ktx",
+    version.ref = "androidx-core"
 }
 //}
 
@@ -220,10 +222,12 @@ versionsセクションは、依存関係やプラグインで参照されるバ
 //list[VersionCatalog12][同じバージョンを繰り返し使用する場合][toml]{
 [libraries]
 lifecycle-viewmodel-ktx = { 
-    module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version = "2.5.1"
+    module = "androidx.lifecycle:lifecycle-viewmodel-ktx",
+    version = "2.5.1"
 }
 lifecycle-viewmodel-compose = { 
-    module = "androidx.lifecycle:lifecycle-viewmodel-compose", version = "2.5.1"
+    module = "androidx.lifecycle:lifecycle-viewmodel-compose",
+    version = "2.5.1"
 }
 //}
 
@@ -233,10 +237,12 @@ androidx-lifecycle = "2.5.1"
 
 [libraries]
 lifecycle-viewmodel-ktx = { 
-    module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "androidx-lifecycle"
+    module = "androidx.lifecycle:lifecycle-viewmodel-ktx",
+    version.ref = "androidx-lifecycle"
 }
 lifecycle-viewmodel-compose = { 
-    module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "androidx-lifecycle"
+    module = "androidx.lifecycle:lifecycle-viewmodel-compose",
+    version.ref = "androidx-lifecycle"
 }
 //}
 
@@ -294,19 +300,25 @@ androidx-appcompat = "1.6.1"
 androidx-appcompat = "androidx.appcompat:appcompat:1.6.1"
 # 書き方 2
 androidx-appcompat = { 
-    module = "androidx.appcompat:appcompat", version = "1.6.1"
+    module = "androidx.appcompat:appcompat",
+    version = "1.6.1"
 }
 # 書き方 3
 androidx-appcompat = { 
-    module = "androidx.appcompat:appcompat", version.ref = "androidx-appcompat"
+    module = "androidx.appcompat:appcompat",
+    version.ref = "androidx-appcompat"
 }
 # 書き方 4
 androidx-appcompat = {
-    group = "androidx.appcompat", name = "appcompat", version = "1.6.1"
+    group = "androidx.appcompat",
+    name = "appcompat",
+    version = "1.6.1"
 }
 # 書き方 5
 androidx-appcompat = { 
-    group = "androidx.appcompat", name = "appcompat", version.ref = "androidx-appcompat"
+    group = "androidx.appcompat",
+    name = "appcompat",
+    version.ref = "androidx-appcompat"
 }
 //}
 
@@ -318,7 +330,8 @@ androidx-appcompat = {
 //list[VersionCatalog17][BOMが提供されている依存関係の宣言][toml]{
 [libraries]
 androidx-compose-bom = { 
-    module = "androidx.compose:compose-bom", version = "2023.01.00"
+    module = "androidx.compose:compose-bom",
+    version = "2023.01.00"
 }
 androidx-compose-material3 = { 
     module = "androidx.compose.material3:material3"
@@ -343,10 +356,12 @@ androidx-lifecycle = "2.5.1"
 
 [libraries]
 lifecycle-viewmodel-ktx = { 
-    module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "androidx-lifecycle"
+    module = "androidx.lifecycle:lifecycle-viewmodel-ktx",
+    version.ref = "androidx-lifecycle"
 }
 lifecycle-viewmodel-compose = { 
-    module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "androidx-lifecycle"
+    module = "androidx.lifecycle:lifecycle-viewmodel-compose",
+    version.ref = "androidx-lifecycle"
 }
 
 [bundles]
@@ -376,7 +391,10 @@ pluginsセクションは、プラグインを定義するセクションです�
 
 //list[VersionCatalog21][libs.versions.toml][toml]{
 [plugins]
-android-application = { id = "com.android.application", version = "8.0.1" }
+android-application = { 
+    id = "com.android.application",
+    version = "8.0.1"
+}
 //}
 
 //list[VersionCatalog22][libs.versions.toml][groovy]{
