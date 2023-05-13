@@ -24,9 +24,9 @@ Glanceを使うことで、ウィジェット開発においてJetpack Compose�
 
 これらの違いはありますが、すでにJetpack Composeを導入しているプロジェクトでは同様の記述方法でコーディングができるため、従来のウィジェット開発経験がなくても開発しやすいという点は大きなメリットです。
 
-//footnote[source_remoteviews][https://developer.android.com/reference/android/widget/RemoteViews]
-//footnote[source_glance_release][https://developer.android.com/jetpack/androidx/releases/glance#version_100_2]
-//footnote[source_recompose][https://developer.android.com/jetpack/compose/mental-model#recomposition]
+//footnote[source_remoteviews][@<href>{https://developer.android.com/reference/android/widget/RemoteViews}]
+//footnote[source_glance_release][@<href>{https://developer.android.com/jetpack/androidx/releases/glance#version_100_2}]
+//footnote[source_recompose][@<href>{https://developer.android.com/jetpack/compose/mental-model#recomposition}]
 
 
 == 環境構築
@@ -56,7 +56,7 @@ android {
 
 Glanceは専用のComposeを使うため、通常のJetpack Composeの依存関係の追加は不要です。
 
-//footnote[source_compose_kotlin][https://developer.android.com/jetpack/androidx/releases/compose-kotlin]
+//footnote[source_compose_kotlin][@<href>{https://developer.android.com/jetpack/androidx/releases/compose-kotlin}]
 
 == Glanceを利用したシンプルなウィジェットの構築：Hello World
 まずは、画面更新などの要素を考慮せず、シンプルなウィジェットを用いてHello Worldを実現してみましょう。
@@ -129,7 +129,7 @@ class GlanceAppWidgetReceiverSample : GlanceAppWidgetReceiver() {
      />
 //}
 
-//footnote[source_metadata][属性一覧 https://developer.android.com/develop/ui/views/appwidgets#AppWidgetProviderInfo]
+//footnote[source_metadata][属性一覧 @<href>{https://developer.android.com/develop/ui/views/appwidgets#AppWidgetProviderInfo}]
 
 === AndroidManifestに追記
 
@@ -232,7 +232,7 @@ class SampleAction : ActionCallback {
 DataStore自体にはPreferences DataStoreとProto DataStoreの2種類がありますが、そのどちらもGlanceで利用できます。
 具体的には、@<code>{androidx.glance.appwidget.state.GlanceAppWidgetStateKt#updateAppWidgetState()}というメソッドが引数違いで@<code>{Preferences DataStore}版と@<code>{Proto　DataStore}版のそれぞれ用意されています。
 
-//footnote[source_datastore][https://developer.android.com/topic/libraries/architecture/datastore]
+//footnote[source_datastore][@<href>{https://developer.android.com/topic/libraries/architecture/datastore}]
 
 ==== Preferences DataStoreを使ってウィジェットの状態を更新する
 @<code>{updateAppWidgetState}（Preferences DataStore版）は次の引数を取ります。
@@ -266,7 +266,7 @@ val prefs = currentState<Preferences>()
 val string: String = prefs[stringPreferencesKey("key_name")]
 //}
 
-//footnote[source_composition_local][https://developer.android.com/jetpack/compose/compositionlocal]
+//footnote[source_composition_local][@<href>{https://developer.android.com/jetpack/compose/compositionlocal}]
 
 ==== Proto DataStoreを使ってウィジェットの状態を更新する
 @<code>{updateAppWidgetState}（Proto DataStore版）は次の引数を取ります。
@@ -390,8 +390,8 @@ updatePeriodMillisによる更新は、指定された周期で正確に実行�
 
 また、どの場合でも、ユーザーがいつでも情報を更新できるように手動更新ボタンを設置することが望ましいです。
 
-//footnote[source_workmanager][https://developer.android.com/topic/libraries/architecture/workmanager]
-//footnote[source_alarmmanager][https://developer.android.com/training/scheduling/alarms]
+//footnote[source_workmanager][@<href>{https://developer.android.com/topic/libraries/architecture/workmanager}]
+//footnote[source_alarmmanager][@<href>{https://developer.android.com/training/scheduling/alarms}]
 
 ===[column] onUpdate(), onEnabled(), onDisabled()
 
