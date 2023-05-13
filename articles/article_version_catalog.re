@@ -39,7 +39,9 @@ dependencies {
 
 //list[VersionCatalog2][Version Catalogで一元管理する場合（定義側）][toml]{
 [libraries]
-androidx-appcompat = { module = "androidx.appcompat:appcompat", version = "1.6.1" }
+androidx-appcompat = { 
+    module = "androidx.appcompat:appcompat", version = "1.6.1"
+}
 //}
 
 //list[VersionCatalog3][Version Catalogで一元管理する場合（使用する側）][groovy]{
@@ -59,7 +61,9 @@ dependencyResolutionManagement {
     versionCatalogs {
         libs {
             version("androidx-core", "1.9.0")
-            alias("androidx-core-ktx").to("androidx.core", "core-ktx").versionRef("androidx-core")
+            alias("androidx-core-ktx")
+                .to("androidx.core", "core-ktx")
+                .versionRef("androidx-core")
         }
     }
 }
@@ -70,7 +74,9 @@ dependencyResolutionManagement {
 androidx-core = "1.9.0"
 
 [libraries]
-androidx-core-ktx = { module = "androidx.core:core-ktx", version.ref = "androidx-core" }
+androidx-core-ktx = { 
+    module = "androidx.core:core-ktx", version.ref = "androidx-core"
+}
 //}
 
 今回は、Android Developersで紹介されているTOMLファイルでの定義@<fn>{definition}を前提とします。
@@ -213,8 +219,12 @@ versionsセクションは、依存関係やプラグインで参照されるバ
 
 //list[VersionCatalog12][同じバージョンを繰り返し使用する場合][toml]{
 [libraries]
-lifecycle-viewmodel-ktx = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version = "2.5.1" }
-lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version = "2.5.1" }
+lifecycle-viewmodel-ktx = { 
+    module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version = "2.5.1"
+}
+lifecycle-viewmodel-compose = { 
+    module = "androidx.lifecycle:lifecycle-viewmodel-compose", version = "2.5.1"
+}
 //}
 
 //list[VersionCatalog13][versionsセクションに繰り返し使用するバージョンを定義した場合][toml]{
@@ -222,8 +232,12 @@ lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-viewmodel
 androidx-lifecycle = "2.5.1"
 
 [libraries]
-lifecycle-viewmodel-ktx = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "androidx-lifecycle" }
-lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "androidx-lifecycle" }
+lifecycle-viewmodel-ktx = { 
+    module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "androidx-lifecycle"
+}
+lifecycle-viewmodel-compose = { 
+    module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "androidx-lifecycle"
+}
 //}
 
 また、versionsセクションに宣言されたバージョンは依存関係やプラグインで参照できるだけでなく、値そのものをタイプセーフなアクセサ@<code>{<カタログ名>.<セクション名>.<バージョン名>.get()}で利用できます。
@@ -279,13 +293,21 @@ androidx-appcompat = "1.6.1"
 # 書き方 1
 androidx-appcompat = "androidx.appcompat:appcompat:1.6.1"
 # 書き方 2
-androidx-appcompat = { module = "androidx.appcompat:appcompat", version = "1.6.1" }
+androidx-appcompat = { 
+    module = "androidx.appcompat:appcompat", version = "1.6.1"
+}
 # 書き方 3
-androidx-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "androidx-appcompat" }
+androidx-appcompat = { 
+    module = "androidx.appcompat:appcompat", version.ref = "androidx-appcompat"
+}
 # 書き方 4
-androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version = "1.6.1" }
+androidx-appcompat = {
+    group = "androidx.appcompat", name = "appcompat", version = "1.6.1"
+}
 # 書き方 5
-androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "androidx-appcompat" }
+androidx-appcompat = { 
+    group = "androidx.appcompat", name = "appcompat", version.ref = "androidx-appcompat"
+}
 //}
 
 また、BOMが提供されているライブラリの場合も宣言可能です。
@@ -295,10 +317,18 @@ androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version
 
 //list[VersionCatalog17][BOMが提供されている依存関係の宣言][toml]{
 [libraries]
-androidx-compose-bom = { module = "androidx.compose:compose-bom", version = "2023.01.00" }
-androidx-compose-material3 = { module = "androidx.compose.material3:material3" }
-androidx-compose-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview" }
-androidx-compose-ui-tooling = { module = "androidx.compose.ui:ui-tooling" }
+androidx-compose-bom = { 
+    module = "androidx.compose:compose-bom", version = "2023.01.00"
+}
+androidx-compose-material3 = { 
+    module = "androidx.compose.material3:material3"
+}
+androidx-compose-ui-tooling-preview = { 
+    module = "androidx.compose.ui:ui-tooling-preview"
+}
+androidx-compose-ui-tooling = { 
+    module = "androidx.compose.ui:ui-tooling"
+}
 //}
 
 ==== bundlesセクション
@@ -312,8 +342,12 @@ bundlesセクションは、複数の依存関係を1つにして定義できる
 androidx-lifecycle = "2.5.1"
 
 [libraries]
-lifecycle-viewmodel-ktx = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "androidx-lifecycle" }
-lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "androidx-lifecycle" }
+lifecycle-viewmodel-ktx = { 
+    module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "androidx-lifecycle"
+}
+lifecycle-viewmodel-compose = { 
+    module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "androidx-lifecycle"
+}
 
 [bundles]
 lifecycle = ["lifecycle-viewmodel-ktx", "lifecycle-viewmodel-compose"]
