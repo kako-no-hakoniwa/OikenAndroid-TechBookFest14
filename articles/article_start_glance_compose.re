@@ -8,7 +8,7 @@ Glanceは、Androidデバイスのホーム画面上に配置できるウィジ�
 従来のウィジェット開発では、@<code>{RemoteViews}@<fn>{source_remoteviews}を直接用いて実装する必要があり、またクリックイベントはすべて@<code>{Intent}を発行して制御する必要があるなど、開発が煩雑になる部分がありました。
 Glanceでは、Composableを@<code>{RemoteViews}に変換してくれるため直接@<code>{RemoteViews}を意識する必要がなく、クリックイベントもコールバックの形で書けるなど、従来の作り方よりも簡単にウィジェットを作成できます。
 
-現在（2023年5月現在）はまだアルファ版@<fn>{source_glance_release}ですが、従来の作り方よりも簡単にウィジェットを作成できます。
+現在（2023年5月現在）はベータ版@<fn>{source_glance_release}です。（5/10にアルファ版からベータ版になりました。）
 
 === Jetpack Composeの記法を使えるとはどういうことか
 Glanceを使うことで、ウィジェット開発においてJetpack Composeの記法を活用できます。
@@ -28,7 +28,7 @@ Glanceを使うことで、ウィジェット開発においてJetpack Compose�
 プロジェクトのbuild.gradleファイルにGlanceの依存関係を追加します。
 //list[build.gradle][build.gradle]{
 dependencies {
-    implementation "androidx.glance:glance-appwidget:1.0.0-alpha05"
+    implementation "androidx.glance:glance-appwidget:1.0.0-beta01"
 }
 
 android {
@@ -58,7 +58,9 @@ Glanceでは、@<code>{GlanceAppWidget}と@<code>{GlanceAppWidgetReceiver}とい
 これらのクラスを継承したカスタムクラスを実装していくことで、ウィジェットを作成していきます。
 
 === GlanceAppWidgetの作成
-まずはじめに、@<code>{GlanceAppWidget}クラスを継承したカスタムウィジェットクラスを作成しましょう。@<code>{content()}メソッドには、おなじみの@<code>{@Composable}アノテーションが付与されており、ここにウィジェットのUIを記述します。
+まずはじめに、@<code>{GlanceAppWidget}クラスを継承したカスタムウィジェットクラスを作成しましょう。
+@<code>{GlanceAppWidget}クラスには抽象メソッドとして@<code>{provideGlance(context: Context, id: GlanceId)}が定義されているためoverrideし、
+その中で@<code>{provideContent(content: @Composable @GlanceComposable () -> Unit)}を呼び出しComposable関数を渡します。
 
 //list[GlanceAppWidget][GlanceAppWidgetを継承してComposableを記述]{
 import androidx.compose.runtime.Composable
@@ -67,8 +69,12 @@ import androidx.glance.text.Text
 
 class GlanceAppWidgetSample : GlanceAppWidget() {
 
+    override suspend fun provideGlance(context: Context, id: GlanceId) {
+        provideContent { Content() }
+    }
+
     @Composable
-    override fun Content() {
+    fun Content() {
         Text(text = "Hello, Glance!")
     }
 }
@@ -317,7 +323,7 @@ class GlanceAppWidgetSample : GlanceAppWidget() {
 
     override val stateDefinition = GlanceAppSampleStateDefinition
     @Composable
-    override fun Content() {
+    fun Content() {
         val sampleState = currentState<SampleState>()
         ...
     }
@@ -406,7 +412,7 @@ class GlanceAppWidgetSample : GlanceAppWidget() {
     )
 
     @Composable
-    override fun Content() {
+    fun Content() {
         val size = LocalSize.current
         when (size) {
             smallMode -> {
