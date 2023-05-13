@@ -6,7 +6,7 @@
 Glanceは、Androidデバイスのホーム画面上に配置できるウィジェットをJetpack Composeの記法を使って開発できるライブラリです。
 
 従来のウィジェット開発では、@<code>{RemoteViews}@<fn>{source_remoteviews}を直接用いて実装する必要があり、またクリックイベントはすべて@<code>{Intent}を発行して制御する必要があるなど、開発が煩雑になる部分がありました。
-Glanceでは、Composableを@<code>{RemoteViews}に変換してくれるため、直接@<code>{RemoteViews}を意識する必要がなく、クリックイベントもコールバックの形で書けるなど、実装が容易になっています。
+Glanceでは、Composableを@<code>{RemoteViews}に変換してくれるため直接@<code>{RemoteViews}を意識する必要がなく、クリックイベントもコールバックの形で書けるなど、従来の作り方よりも簡単にウィジェットを作成できます。
 
 現在（2023年5月現在）はまだアルファ版@<fn>{source_glance_release}ですが、従来の作り方よりも簡単にウィジェットを作成できます。
 
@@ -17,8 +17,7 @@ Glanceを使うことで、ウィジェット開発においてJetpack Compose�
 たとえば、一般的によく使われる@<code>{Modifier}はGlanceでは使用できず、その代わりに@<code>{GlanceModifier}が提供されています。
 また、表示内容の差分のみ再コンポーズ@<fn>{source_recompose}してくれるような仕組みは存在せず、イベントに基づいて画面全体を更新するという考え方が適用されています。
 
-しかしこれらの前提を理解した上で、すでにJetpack Composeを導入しているプロジェクトでは同様の記述方法でコーディングができるという点は大変有益です。
-さらに、従来のウィジェット開発経験がなくても簡単に記述できるという利点があります。
+しかしこれらの前提を理解した上で、すでにJetpack Composeを導入しているプロジェクトでは同様の記述方法でコーディングができるため、従来のウィジェット開発経験がなくても開発しやすいという点は大きなメリットです。
 
 //footnote[source_remoteviews][https://developer.android.com/reference/android/widget/RemoteViews]
 //footnote[source_glance_release][https://developer.android.com/jetpack/androidx/releases/glance#1.0.0-alpha05]
@@ -137,7 +136,7 @@ class GlanceAppWidgetReceiverSample : GlanceAppWidgetReceiver() {
 //}
 
 == ウィジェットの表示をカスタムする方法
-ここからはウィジェットの表示をカスタムしていきましょう。
+ここからはウィジェットの表示をカスタムする方法を説明します。
 
 === GlanceModifier
 通常のJetpack Composeでは、UIの作成において@<code>{Modifier}を使って要素のレイアウトやスタイルを変更するのが一般的です。しかし、Glanceでは@<code>{Modifier}を直接使用できず、代わりに@<code>{GlanceModifier}を使用します。
@@ -148,7 +147,7 @@ class GlanceAppWidgetReceiverSample : GlanceAppWidgetReceiver() {
 そのため、@<code>{Arrangement.SpaceAround}や@<code>{Arrangement.SpaceBetween}などを指定して要素を配置することは現状できません。
 また、@<code>{RowScope}で提供されている@<code>{GlanceModifier}には@<code>{weight()}がなく@<code>{defaultWeight()}しかないため、自由にweightを指定できません。
 
-...と、いくつか注意すべき制約はありますが、それでも基本的なレイアウトとスタイリングは十分に実現できます。
+...と、いくつかの制約はありますが、それでも基本的なレイアウトとスタイリングは十分に実現できます。
 
 //footnote[source_glance_modifier][https://developer.android.com/reference/kotlin/androidx/glance/GlanceModifier#extension-functions_1]
 
