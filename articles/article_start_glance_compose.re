@@ -25,7 +25,7 @@ Glanceを使うことで、ウィジェット開発においてJetpack Compose�
 しかしこれらの前提を理解した上で、すでにJetpack Composeを導入しているプロジェクトでは同様の記述方法でコーディングができるため、従来のウィジェット開発経験がなくても開発しやすいという点は大きなメリットです。
 
 //footnote[source_remoteviews][https://developer.android.com/reference/android/widget/RemoteViews]
-//footnote[source_glance_release][https://developer.android.com/jetpack/androidx/releases/glance#1.0.0-alpha05]
+//footnote[source_glance_release][https://developer.android.com/jetpack/androidx/releases/glance#version_100_2]
 //footnote[source_recompose][https://developer.android.com/jetpack/compose/mental-model#recomposition]
 
 
@@ -456,22 +456,3 @@ Glanceを使ったウィジェット開発について解説しました。
  * GitHub: android/user-interface-samples/AppWidget@<br>{}@<href>{https://github.com/android/user-interface-samples/tree/main/AppWidget}@<br>{}公式のウィジェットサンプルです。
 
  * Android Developers: Create a simple widget@<br>{}@<href>{https://developer.android.com/develop/ui/views/appwidgets}@<br>{}GlanceはRemoteViewsをラップしているものなので、内部の仕組みとしては既存のウィジェットの仕組みが動作しています。そのため従来のウィジェットのドキュメントも有用です。
-
-===[column] おまけ Glanceミニゲーム
-
-本章の内容を元に、ウィジェットでミニゲーム@<fn>{minigame}を作成してみました。
-
-前方から次々に降ってくるAndroidロボット@<fn>{source_androidrobot}を集めるゲームです。
-
-//image[glance_game][Glanceでミニゲーム（開発中）][scale=0.3]{
-
-//}
-
-
-コードは次のGitHubリポジトリで公開されています。興味のある方は、ぜひチェックしてみてください。
-@<href>{https://github.com/kumokumot/GlanceGalaxyDroid}
-
-//footnote[minigame][ウィジェットでミニゲームを作成すること自体は、バッテリー消費の問題や画面描画の遅さ、またホーム画面でそれを行う意義などを考えると実用的な意味があるわけではありません。（ただのロマンです。）]
-//footnote[source_androidrobot][https://developer.android.com/distribute/marketing-tools/brand-guidelines#android_robot]
-
-===[/column]
