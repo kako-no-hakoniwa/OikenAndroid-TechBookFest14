@@ -4,7 +4,39 @@
 https://developer.android.com/jetpack/compose/testing?hl=ja
 //}
 
+== Version Catalogを使って依存関係を一元管理する
 
+//bibpaper[vc1][Android Developers: ビルドをバージョン カタログに移行する]{
+https://developer.android.com/studio/build/migrate-to-catalogs?hl=ja
+//}
+
+//bibpaper[vc2][Gradle: Sharing dependency versions between projects]{
+https://docs.gradle.org/8.1.1/userguide/platforms.html
+//}
+
+//bibpaper[vc3][Renovate]{
+https://www.mend.io/renovate/
+//}
+
+//bibpaper[vc4][Renovate Docs: Configuration Options]{
+https://docs.renovatebot.com/configuration-options/
+//}
+
+//bibpaper[vc5][Dependabot: Dependabot version updates keeps Gradle version catalogs up-to-date]{
+https://github.blog/changelog/2023-03-13-dependabot-version-updates-keeps-gradle-version-catalogs-up-to-date/
+//}
+
+//bibpaper[vc6][Android Developers: AppCompat]{
+https://developer.android.com/jetpack/androidx/releases/appcompat?hl=ja
+//}
+
+//bibpaper[vc7][Android Developers: Lifecycle]{
+https://developer.android.com/jetpack/androidx/releases/lifecycle?hl=ja
+//}
+
+//bibpaper[vc8][Android Developers: Compose]{
+https://developer.android.com/jetpack/androidx/releases/compose?hl=ja
+//}
 
 == Glanceでウィジェットをつくる
 
