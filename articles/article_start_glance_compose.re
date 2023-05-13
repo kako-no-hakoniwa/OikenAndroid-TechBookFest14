@@ -170,7 +170,7 @@ class GlanceAppWidgetReceiverSample : GlanceAppWidgetReceiver() {
 
 ...と、いくつかの制約はありますが、それでも基本的なレイアウトとスタイリングは十分に実現できます。
 
-//footnote[source_glance_modifier][https://developer.android.com/reference/kotlin/androidx/glance/GlanceModifier#extension-functions_1]
+//footnote[source_glance_modifier][@<href>{https://developer.android.com/reference/kotlin/androidx/glance/GlanceModifier#extension-functions_1}]
 
 === リスト表示
 Glanceでも@<code>{LazyColumn}が使用できます。ただし、現時点では@<code>{LazyRow}は利用できないため注意が必要です。
