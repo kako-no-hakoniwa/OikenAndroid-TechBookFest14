@@ -51,6 +51,41 @@ dependencies {
 }
 //}
 
+===[column] Version Catalogに対応したAndroid Studio Giraffe
+
+Android Studio GiraffeからTOMLベースのVersion Catalogがサポートされるようになりました。@<fn>{android-studio}
+Android Studio Flamingoでは表示されていたVersion Catalog未対応のWarning表示が、Android Studio Giraffeでは無くなっているのがわかりますね。
+個人的には、カタログに定義されている古いバージョンに更新可能なバージョンがサジェストされるようになったこと、コード補完がより充実するようになったことの2点が非常に便利だと感じます。
+
+//image[image6][Version Catalog未対応表示の有無]{
+//}
+
+==== カタログに定義されている古いバージョンには更新可能なバージョンをサジェスト
+
+build.gradleでのベタ書きやextブロックでの定義などと同様に、定義されているバージョンが古い場合に警告表示されるようになったため視認しやすくなりました。
+また、カーソルを合わせると更新可能なバージョンがサジェストされるようになっています。
+
+//image[image7_flamingo][Android Studio Flamingo（サジェストなし）]{
+//}
+
+//image[image7_giraffe][Android Studio Giraffe（サジェストあり）]{
+//}
+
+==== コード補完がより充実に
+
+Android Studio Flamingoでも最低限の補完が効きました。
+しかし、Android Studio Giraffeではコード補完がより充実し利用しやすくなりました。
+
+//image[image8_flamingo][Android Studio Flamingo]{
+//}
+
+//image[image8_giraffe][Android Studio Giraffe]{
+//}
+
+===[/column]
+
+//footnote[android-studio][https://developer.android.com/studio/preview/features#gradle-version-catalogs]
+
 == Version Catalogを導入する
 
 === どこで定義するか
@@ -87,7 +122,7 @@ androidx-core-ktx = {
 
 === TOMLファイルを作成する
 
-ルートプロジェクトのgradleフォルダ内で@<code>{libs.versions.toml}ファイルを作成するのが、簡単かつAndroid公式でもオススメされている方法です。
+ルートプロジェクトのgradleフォルダ内で@<code>{libs.versions.toml}ファイルを作成するのが、簡単かつAndroid公式でもオススメされている方法です。@<fn>{recommendation}
 
 //footnote[recommendation][@<href>{https://developer.android.com/studio/build/migrate-to-catalogs?hl=ja}]
 
@@ -432,7 +467,7 @@ GitHubを利用している場合は、用意されているRenovateのGitHub Ap
 
 === Renovateの設定
 
-Renovateの設定項目は数多くある@<fn>{renovate-setup-options}ため、今回は@<code>{schedule}のみ説明いたします。
+Renovateの設定項目は数多くある@<fn>{renovate-setup-options}ため、今回は@<code>{schedule}@<fn>{renovate-setup-schedule}のみ説明いたします。
 Renovateは更新できるバージョンがある場合にプルリクエストを自動で作成してくれますが、都度作成されると煩わしく感じたり、休日に作成されると不都合になったりする場合もあります。
 その際は@<code>{schedule}項目でプルリクエストの作成タイミングを設定してあげるとよいでしょう。
 たとえば、月曜日の10:00~17:00の間のみに限定できます。

@@ -38,6 +38,10 @@ https://developer.android.com/jetpack/androidx/releases/lifecycle?hl=ja
 https://developer.android.com/jetpack/androidx/releases/compose?hl=ja
 //}
 
+//bibpaper[vc9][Android Developers: Support for Gradle Version Catalogs]{
+https://developer.android.com/studio/preview/features#gradle-version-catalogs
+//}
+
 == Glanceでウィジェットをつくる
 
 //bibpaper[glance1][Android Developers: RemodeViews]{
