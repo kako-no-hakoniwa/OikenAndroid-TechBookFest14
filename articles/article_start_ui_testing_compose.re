@@ -18,7 +18,7 @@ Jetpack composeで実装されたUIをテストする場合、UIテストを実�
 androidTestImplementation("androidx.compose.ui:ui-test-junit4:1.4.0")
 //}
 
-JUnit 4（テストフレームワーク）にComposeを統合します。このモジュールにはテストで利用するComposeTestRuleとComposeContentTestRulegが含まれています。
+JUnit 4（テストフレームワーク）@<bib>{junit4}にComposeを統合します。このモジュールにはテストで利用するComposeTestRuleとComposeContentTestRulegが含まれています。
 
 === UI階層（Node）からComposeを選択する
 
@@ -135,7 +135,7 @@ composeTestRule
 
 ここまでJetpack ComposeでUIテストを実行するための基本操作を紹介してきました。この節はJetpack ComposeがどのようにUI階層を理解するのか紹介していきます。
 
-Jetpack Composeのセマンティクスツリーは、テストフレームワーク以外にユーザー補助サービスからの認識に利用されます。
+Jetpack Composeのセマンティクスツリー@<bib>{compose-ui-semantics}は、テストフレームワーク以外にユーザー補助サービスからの認識に利用されます。
 
 セマンティクスツリーという時、2つのツリーをことを指します。子孫ノードをマージされたセマンティクスツリーとマージを適応せずすべてのノードをそのままにするマージされていないセマンティクスツリーがあります。
 
@@ -184,7 +184,7 @@ Node #1 at (l=0.0, t=108.0, r=243.0, b=234.0)px
 composeTestRule.onRoot(useUnmergedTree = true).printToLog("TAG")
 //}
 
-//list[LogcatUnMerged][LogcatUnMerged.sh]{
+//list[LogcatUnMerged][ツリーのログ出力]{
 Node #1 at (l=0.0, t=108.0, r=243.0, b=234.0)px
     |-Node #3 at (l=0.0, t=119.0, r=243.0, b=224.0)px, Tag: 'Button'
     Role = 'Button'
@@ -204,11 +204,11 @@ Activityのリソースにアクセスする必要がある時、createComposeRu
 
 AndroidManifest.xmlにComponentActivityを追加する必要があります。そのために次の依存関係を追加します。(@<list>{manifestdependency})
 
-//list[manifestdependency][manifest.gradle]{
+//list[manifestdependency][build.gradle]{
 debugImplementation("androidx.compose.ui:ui-test-manifest:1.4.0")
 //}
 
-//list[manifest][manifest.kt]{
+//list[manifest][AndroidManifest.xml]{
 <application
     //...
     <activity android:name=".ComponentActivity" />
@@ -295,13 +295,13 @@ fun `状態の復元をチェックするテスト`() {
 
 Composeでナビゲーションのテストを行う場合、次の依存関係を追加します。(@<list>{navigationDependency})
 
-//list[navigationDependency][navigationDependency.gradle]{
+//list[navigationDependency][build.gradle]{
 androidTestImplementation "androidx.navigation:navigation-testing:2.5.3"
 //}
 
 TestNavHostControllerのインスタンス化します。@Beforeアノテーションをつけたメソッドにインスタンス化を行う実装を処理しておきます。(@<list>{before})
 
-//list[before][before.kt]{
+//list[before][navigationTest.kt]{
 @get:Rule
 val composeTestRule = createComposeRule()
 private lateinit var navController: TestNavHostController
@@ -341,7 +341,7 @@ CIサービスを用いている環境であれば簡単な設定でUIテスト�
 
 例えばCircleCIではAndroidシステムのOrbが用意されているため、次のような設定でCircleCI上でUIテストを実行できます。(@<list>{ciTest})
 
-//list[ciTest][ciTest.yml]{
+//list[ciTest][uitest.yml]{
 jobs:
   android-test:
     executor:
@@ -356,26 +356,26 @@ jobs:
 
 === Firebase Test Lab を利用したUIテスト自動化
 
-多種多様なデバイスや構成でテストを行いたい場合にFirebase Test Labを用いると便利です。
+多種多様なデバイスや構成でテストを行いたい場合にFirebase Test Lab@<bib>{test_lab}を用いると便利です。
 Firebase Test Labの利用はConsole上でも行えますが、gcloud CLIによりローカルPCやCIサービス上でも利用できます。
 
 Firebase Test Labする前にテスト対象アプリとテスト実行アプリをビルドする必要があります。(@<list>{buildApk})
 
-//list[buildApk][buildApk.sh]{
+//list[buildApk][ビルドコマンド]{
 ./gradlew :app:assembleDebug
 ./gradlew :app:assembleDebugAndroidTest
 //}
 
 デフォルトでは次のフォルダ内にapkファイルが生成されます。
 
-//list[apkholder][apkholder.sh]{
+//list[apkholder][apkの出力先]{
 /app/build/outputs/apk
 //}
 
 生成できたapkをFirebase Test Labでテスト実行します。
 インストルメンテーションテストを実行する場合次のようなコマンドで実行することができます。
 
-//list[gcloudtest][gcloudtest.sh]{
+//list[gcloudtest][Firebase Test Labでのテスト実行コマンド]{
 gcloud firebase test android run \
   --type instrumentation \
   --app app/build/outputs/apk/debug/app-debug.apk \
@@ -402,7 +402,7 @@ Robo Testはアプリのユーザー インターフェースを分析し、実�
 
 Composeで実装されたログイン画面の認証を行う場合、Robo Testが任意のコンポーザブルにアクセスできるようにModifier.testTagを設定します。
 
-//list[composeLogin][composeLogin.sh]{
+//list[composeLogin][LoginScreen.kt]{
 @Composable
 fun LoginScreen() {
     Column {
@@ -426,7 +426,7 @@ fun LoginScreen() {
 
 このLoginScreenコンポーザブルをRobo Testで認証させる場合、例えば次のようなRobo スクリプトを渡すと認証を自動で行えます。
 
-//list[roboScript][roboScript.sh]{
+//list[roboScript][login_robo_script.json]{
 [
   {
     "crawlStage": "crawl",
