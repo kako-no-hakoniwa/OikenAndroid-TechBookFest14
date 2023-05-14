@@ -295,7 +295,7 @@ fun `状態の復元をチェックするテスト`() {
 
 Composeでナビゲーションのテストを行う場合、次の依存関係を追加します。(@<list>{navigationDependency})
 
-//list[navigationDependency][navigationDependency.gradle]{
+//list[navigationDependency][build.gradle]{
 androidTestImplementation "androidx.navigation:navigation-testing:2.5.3"
 //}
 
@@ -402,7 +402,7 @@ Robo Testはアプリのユーザー インターフェースを分析し、実�
 
 Composeで実装されたログイン画面の認証を行う場合、Robo Testが任意のコンポーザブルにアクセスできるようにModifier.testTagを設定します。
 
-//list[composeLogin][composeLogin.sh]{
+//list[composeLogin][LoginScreen.kt]{
 @Composable
 fun LoginScreen() {
     Column {
@@ -426,7 +426,7 @@ fun LoginScreen() {
 
 このLoginScreenコンポーザブルをRobo Testで認証させる場合、例えば次のようなRobo スクリプトを渡すと認証を自動で行えます。
 
-//list[roboScript][roboScript.json]{
+//list[roboScript][login_robo_script.json]{
 [
   {
     "crawlStage": "crawl",
