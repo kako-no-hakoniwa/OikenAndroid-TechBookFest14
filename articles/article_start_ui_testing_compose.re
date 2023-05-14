@@ -405,23 +405,18 @@ Composeで実装されたログイン画面の認証を行う場合、Robo Test�
 //list[composeLogin][composeLogin.sh]{
 @Composable
 fun LoginScreen() {
-    Column(
-        // ...
-    ) {
+    Column {
         OutlinedTextField(
             modifier = Modifier
                 .testTag("emailLogin"),
-            // ...
         )
         OutlinedTextField(
             modifier = Modifier
                 .testTag("passwordLogin"),
-            // ...
         )
         Button(
             modifier = Modifier
                 .testTag("buttonLogin"),
-            // ...
         ) {
             Text(text = "Login")
         }
