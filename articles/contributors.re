@@ -16,4 +16,4 @@ Androidエンジニア歴1年ちょっと。トマトとゲームと食べるの
 
 == 表紙デザイン・イラスト
 
-
+knyackiko / @knyackiko
