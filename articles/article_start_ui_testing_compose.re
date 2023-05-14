@@ -82,7 +82,10 @@ Button(modifier = Modifier.testTag("Button"), ...) {
 //}
 
 //list[hasParent][hasParent.kt]{
-composeTestRule.onNode(hasParent(hasTestTag("Button")), useUnmergedTree = true)
+composeTestRule.onNode(
+    hasParent(hasTestTag("Button")),
+    useUnmergedTree = true
+)
 //}
 
 useUnmergedTree引数はマージされていないツリーからノードを検索する時にtrueを設定します。例えばボタンなどのコンポーザブル内を検索したい時に有効です。
