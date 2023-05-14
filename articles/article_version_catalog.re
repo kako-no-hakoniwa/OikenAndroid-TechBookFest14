@@ -122,7 +122,7 @@ androidx-core-ktx = {
 
 === TOMLファイルを作成する
 
-ルートプロジェクトのgradleフォルダ内で@<code>{libs.versions.toml}ファイルを作成するのが、簡単かつAndroid公式でもオススメされている方法です。
+ルートプロジェクトのgradleフォルダ内で@<code>{libs.versions.toml}ファイルを作成するのが、簡単かつAndroid公式でもオススメされている方法です。@<fn>{recommendation}
 
 //footnote[recommendation][@<href>{https://developer.android.com/studio/build/migrate-to-catalogs?hl=ja}]
 
@@ -467,7 +467,7 @@ GitHubを利用している場合は、用意されているRenovateのGitHub Ap
 
 === Renovateの設定
 
-Renovateの設定項目は数多くある@<fn>{renovate-setup-options}ため、今回は@<code>{schedule}のみ説明いたします。
+Renovateの設定項目は数多くある@<fn>{renovate-setup-options}ため、今回は@<code>{schedule}@<fn>{renovate-setup-schedule}のみ説明いたします。
 Renovateは更新できるバージョンがある場合にプルリクエストを自動で作成してくれますが、都度作成されると煩わしく感じたり、休日に作成されると不都合になったりする場合もあります。
 その際は@<code>{schedule}項目でプルリクエストの作成タイミングを設定してあげるとよいでしょう。
 たとえば、月曜日の10:00~17:00の間のみに限定できます。
