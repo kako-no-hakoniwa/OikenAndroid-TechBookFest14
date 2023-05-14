@@ -82,7 +82,10 @@ Button(modifier = Modifier.testTag("Button"), ...) {
 //}
 
 //list[hasParent][hasParent.kt]{
-composeTestRule.onNode(hasParent(hasTestTag("Button")), useUnmergedTree = true)
+composeTestRule.onNode(
+    hasParent(hasTestTag("Button")),
+    useUnmergedTree = true
+)
 //}
 
 useUnmergedTree引数はマージされていないツリーからノードを検索する時にtrueを設定します。例えばボタンなどのコンポーザブル内を検索したい時に有効です。
@@ -402,23 +405,18 @@ Composeで実装されたログイン画面の認証を行う場合、Robo Test�
 //list[composeLogin][composeLogin.sh]{
 @Composable
 fun LoginScreen() {
-    Column(
-        // ...
-    ) {
+    Column {
         OutlinedTextField(
             modifier = Modifier
                 .testTag("emailLogin"),
-            // ...
         )
         OutlinedTextField(
             modifier = Modifier
                 .testTag("passwordLogin"),
-            // ...
         )
         Button(
             modifier = Modifier
                 .testTag("buttonLogin"),
-            // ...
         ) {
             Text(text = "Login")
         }
