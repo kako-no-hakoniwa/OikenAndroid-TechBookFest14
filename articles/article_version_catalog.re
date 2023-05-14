@@ -1,9 +1,6 @@
 = Version Catalogを使って依存関係を一元管理する
 
-== はじめに
-
 2022年1月からAndroidアプリ開発をはじめたknyackikoです。
-
 現在のおいしい健康では、ライブラリのバージョン管理に@<code>{ext}ブロック（Gradleのextraプロパティ）を使用しています。
 しかし、@<code>{ext}ブロックを使用する方法ではAndroid Studioで定義ジャンプや補完が効かないなどの不便な点があります。
 加えて、おいしい健康ではライブラリの定期的なバージョン更新を効率良く進められていない問題もありました。
@@ -23,8 +20,8 @@
 Version Catalog（バージョンカタログ）は、ライブラリの依存関係やプラグインを一元管理する方法の1つです。
 Gradle 7.0でfeature previewとして導入された機能@<fn>{gradle-7.0}で、Gradle 7.4以降@<fn>{gradle-7.4}からは標準的な機能として使用できます。
 
-//footnote[gradle-7.0][https://docs.gradle.org/7.0/userguide/platforms.html]
-//footnote[gradle-7.4][https://docs.gradle.org/7.4/userguide/platforms.html]
+//footnote[gradle-7.0][@<href>{https://docs.gradle.org/7.0/userguide/platforms.html}]
+//footnote[gradle-7.4][@<href>{https://docs.gradle.org/7.4/userguide/platforms.html}]
 
 === バージョンを一元管理する理由
 
@@ -42,7 +39,10 @@ dependencies {
 
 //list[VersionCatalog2][Version Catalogで一元管理する場合（定義側）][toml]{
 [libraries]
-androidx-appcompat = { module = "androidx.appcompat:appcompat", version = "1.6.1" }
+androidx-appcompat = { 
+    module = "androidx.appcompat:appcompat",
+    version = "1.6.1"
+}
 //}
 
 //list[VersionCatalog3][Version Catalogで一元管理する場合（使用する側）][groovy]{
@@ -62,7 +62,9 @@ dependencyResolutionManagement {
     versionCatalogs {
         libs {
             version("androidx-core", "1.9.0")
-            alias("androidx-core-ktx").to("androidx.core", "core-ktx").versionRef("androidx-core")
+            alias("androidx-core-ktx")
+                .to("androidx.core", "core-ktx")
+                .versionRef("androidx-core")
         }
     }
 }
@@ -73,27 +75,30 @@ dependencyResolutionManagement {
 androidx-core = "1.9.0"
 
 [libraries]
-androidx-core-ktx = { module = "androidx.core:core-ktx", version.ref = "androidx-core" }
+androidx-core-ktx = { 
+    module = "androidx.core:core-ktx",
+    version.ref = "androidx-core"
+}
 //}
 
 今回は、Android Developersで紹介されているTOMLファイルでの定義@<fn>{definition}を前提とします。
 
-//footnote[definition][https://developer.android.com/studio/build/migrate-to-catalogs?hl=ja]
+//footnote[definition][@<href>{https://developer.android.com/studio/build/migrate-to-catalogs?hl=ja}]
 
 === TOMLファイルを作成する
 
 ルートプロジェクトのgradleフォルダ内で@<code>{libs.versions.toml}ファイルを作成するのが、簡単かつAndroid公式でもオススメされている方法です。
 
-//footnote[recommendation][https://developer.android.com/studio/build/migrate-to-catalogs?hl=ja#:~:text=Gradle は、デフォルトで libs.versions.toml ファイルでカタログを検索するため、このデフォルト名を使用することをおすすめします。]
+//footnote[recommendation][@<href>{https://developer.android.com/studio/build/migrate-to-catalogs?hl=ja}]
 
 //list[VersionCatalog6][TOMLファイルのデフォルト名と作成場所][bash]{
 .
 ├── app
-│   ├── .gitignore
-│   ├── build.gradle
-│   └── src
+│   ├── .gitignore
+│   ├── build.gradle
+│   └── src
 ├── gradle
-│   └── libs.versions.toml
+│   └── libs.versions.toml
 ├── build.gradle
 ├── gradle.properties
 ├── gradlew
@@ -131,7 +136,7 @@ dependencies {
 具体例があるとわかりやすいので、AppCompatライブラリ@<fn>{AppCompat}を依存関係に追加する場合を考えます。
 まず、Version Catalogを使わずにbuild.gradleにそのまま依存関係を追加する方法を見ていきましょう。
 
-//footnote[AppCompat][https://developer.android.com/jetpack/androidx/releases/appcompat?hl=ja]
+//footnote[AppCompat][@<href>{https://developer.android.com/jetpack/androidx/releases/appcompat?hl=ja}]
 
 //list[VersionCatalog9][build.gradle（Version Catalogを使わない従来の依存関係の追加）][groovy]{
 dependencies {
@@ -163,31 +168,30 @@ dependencies {
 宣言したエイリアスから生成されるカタログ（型安全なアクセサ）は、ダッシュ、アンダースコア、ドットのいずれの区切り文字を使用していたとしても自動的にドットに変換されます。
 次は、有効なエイリアスと生成されるタイプセーフなアクセサの例です。
 
-//footnote[alias-dash][https://docs.gradle.org/8.1.1/userguide/platforms.html#sub:central-declaration-of-dependencies:~:text=Aliases must consist of a series of identifiers separated by a dash (-%2C recommended)%2C an underscore (_) or a dot (.).]
+//footnote[alias-dash][@<href>{https://docs.gradle.org/8.1.1/userguide/platforms.html#sub:central-declaration-of-dependencies}]
 
 //table[table1][有効なエイリアスと生成されるアクセサ例]{
-有効なエイリアス    生成されるアクセサ
+有効なエイリアス	生成されるアクセサ
 --------------------------------------------
-hoge    hoge
-hoge-fuga   hoge.fuga 
-hoge-fuga1  hoge.fuga1 
-hoge.fuga.piyo  hoge.fuga.piyo 
+hoge	hoge
+hoge-fuga	hoge.fuga 
+hoge-fuga1	hoge.fuga1 
+hoge.fuga.piyo	hoge.fuga.piyo 
 //}
 
 大文字小文字の区別についてですが、Gradle公式ではできれば小文字@<fn>{alias-lowercase}としています。
-また、Android公式では依存関係やプラグインの命名規則にケバブケース（例: hoge-fuga）を推奨しています@<fn>{alias-kebabcase1}@<fn>{alias-kebabcase2}。
+また、Android公式では依存関係やプラグインの命名規則にケバブケース（例: hoge-fuga）を推奨しています@<fn>{alias-kebabcase}。
 ただ、Gradle公式ではドットで区切られたサブグループのアクセサを生成したくない場合には大文字と小文字を区別することもオススメしています。
 たとえば、カタログファイルに宣言されたアプリのバージョン情報（versionCode, versionName）やAPIレベル（compileSdk, targetSdk, minSdk）を参照する場合などは、サブグループに分かれていないアクセサの方が意味が通りやすいかもしれません。
 
-//footnote[alias-lowercase][https://docs.gradle.org/8.1.1/userguide/platforms.html#sub:central-declaration-of-dependencies:~:text=Identifiers themselves must consist of ascii characters%2C preferably lowercase%2C eventually followed by numbers.]
-//footnote[alias-kebabcase1][https://developer.android.com/studio/build/migrate-to-catalogs?hl=ja#:~:text=カタログの依存関係ブロックで推奨される命名規則は、ビルドファイル内でより適切にコード補完を支援するためのケバブケース（androidx-ktx など）です。]
-//footnote[alias-kebabcase2][https://developer.android.com/studio/build/migrate-to-catalogs?hl=ja#:~:text=依存関係と同様に、ビルドファイル内でより適切にコード補完を支援するための plugins ブロック カタログ エントリの推奨形式は、ケバブケース（android-application など）です。]
+//footnote[alias-lowercase][@<href>{https://docs.gradle.org/8.1.1/userguide/platforms.html#sub:central-declaration-of-dependencies}]
+//footnote[alias-kebabcase][@<href>{https://developer.android.com/studio/build/migrate-to-catalogs?hl=ja}]
 
 //table[table2][有効なエイリアスと生成されるアクセサ例]{
-有効なエイリアス    生成されるアクセサ
+有効なエイリアス	生成されるアクセサ
 --------------------------------------------
-version-code    version.code
-versionCode versionCode 
+version-code	version.code
+versionCode	versionCode 
 //}
 
 //image[image1][Android Studioでの補完]{
@@ -195,7 +199,7 @@ versionCode versionCode
 
 また、予約語があるので一部のキーワード（@<code>{extensions}、@<code>{class}など）はエイリアスとして使うことはできません@<fn>{alias-reserved}。
 
-//footnote[alias-reserved][詳細な予約語は公式を参照してください。https://docs.gradle.org/8.1.1/userguide/platforms.html#sub:central-declaration-of-dependencies:~:text=Some keywords are reserved%2C so they cannot be used as an alias. Next words cannot be used as an alias%3A]
+//footnote[alias-reserved][詳細な予約語は公式を参照してください。@<href>{https://docs.gradle.org/8.1.1/userguide/platforms.html#sub:central-declaration-of-dependencies}]
 
 === カタログファイルのセクション
 
@@ -213,12 +217,18 @@ versionsセクションは、依存関係やプラグインで参照されるバ
 同じバージョンを参照する複数のエイリアスがある場合にとくに有用で、versionsセクションに共有しているバージョンを定義すれば、1箇所で管理するだけでOKになります。
 次は、Lifecycleライブラリ@<fn>{lifecycle}での例です。
 
-//footnote[lifecycle][https://developer.android.com/jetpack/androidx/releases/lifecycle?hl=ja]
+//footnote[lifecycle][@<href>{https://developer.android.com/jetpack/androidx/releases/lifecycle?hl=ja}]
 
 //list[VersionCatalog12][同じバージョンを繰り返し使用する場合][toml]{
 [libraries]
-lifecycle-viewmodel-ktx = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version = "2.5.1" }
-lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version = "2.5.1" }
+lifecycle-viewmodel-ktx = { 
+    module = "androidx.lifecycle:lifecycle-viewmodel-ktx",
+    version = "2.5.1"
+}
+lifecycle-viewmodel-compose = { 
+    module = "androidx.lifecycle:lifecycle-viewmodel-compose",
+    version = "2.5.1"
+}
 //}
 
 //list[VersionCatalog13][versionsセクションに繰り返し使用するバージョンを定義した場合][toml]{
@@ -226,8 +236,14 @@ lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-viewmodel
 androidx-lifecycle = "2.5.1"
 
 [libraries]
-lifecycle-viewmodel-ktx = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "androidx-lifecycle" }
-lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "androidx-lifecycle" }
+lifecycle-viewmodel-ktx = { 
+    module = "androidx.lifecycle:lifecycle-viewmodel-ktx",
+    version.ref = "androidx-lifecycle"
+}
+lifecycle-viewmodel-compose = { 
+    module = "androidx.lifecycle:lifecycle-viewmodel-compose",
+    version.ref = "androidx-lifecycle"
+}
 //}
 
 また、versionsセクションに宣言されたバージョンは依存関係やプラグインで参照できるだけでなく、値そのものをタイプセーフなアクセサ@<code>{<カタログ名>.<セクション名>.<バージョン名>.get()}で利用できます。
@@ -283,26 +299,49 @@ androidx-appcompat = "1.6.1"
 # 書き方 1
 androidx-appcompat = "androidx.appcompat:appcompat:1.6.1"
 # 書き方 2
-androidx-appcompat = { module = "androidx.appcompat:appcompat", version = "1.6.1" }
+androidx-appcompat = { 
+    module = "androidx.appcompat:appcompat",
+    version = "1.6.1"
+}
 # 書き方 3
-androidx-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "androidx-appcompat" }
+androidx-appcompat = { 
+    module = "androidx.appcompat:appcompat",
+    version.ref = "androidx-appcompat"
+}
 # 書き方 4
-androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version = "1.6.1" }
+androidx-appcompat = {
+    group = "androidx.appcompat",
+    name = "appcompat",
+    version = "1.6.1"
+}
 # 書き方 5
-androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "androidx-appcompat" }
+androidx-appcompat = { 
+    group = "androidx.appcompat",
+    name = "appcompat",
+    version.ref = "androidx-appcompat"
+}
 //}
 
 また、BOMが提供されているライブラリの場合も宣言可能です。
 次に示すのは、Compose@<fn>{compose}のBOMを使用した例です。
 
-//footnote[compose][https://developer.android.com/jetpack/androidx/releases/compose?hl=ja]
+//footnote[compose][@<href>{https://developer.android.com/jetpack/androidx/releases/compose?hl=ja}]
 
 //list[VersionCatalog17][BOMが提供されている依存関係の宣言][toml]{
 [libraries]
-androidx-compose-bom = { module = "androidx.compose:compose-bom", version = "2023.01.00" }
-androidx-compose-material3 = { module = "androidx.compose.material3:material3" }
-androidx-compose-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview" }
-androidx-compose-ui-tooling = { module = "androidx.compose.ui:ui-tooling" }
+androidx-compose-bom = { 
+    module = "androidx.compose:compose-bom",
+    version = "2023.01.00"
+}
+androidx-compose-material3 = { 
+    module = "androidx.compose.material3:material3"
+}
+androidx-compose-ui-tooling-preview = { 
+    module = "androidx.compose.ui:ui-tooling-preview"
+}
+androidx-compose-ui-tooling = { 
+    module = "androidx.compose.ui:ui-tooling"
+}
 //}
 
 ==== bundlesセクション
@@ -316,8 +355,14 @@ bundlesセクションは、複数の依存関係を1つにして定義できる
 androidx-lifecycle = "2.5.1"
 
 [libraries]
-lifecycle-viewmodel-ktx = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "androidx-lifecycle" }
-lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "androidx-lifecycle" }
+lifecycle-viewmodel-ktx = { 
+    module = "androidx.lifecycle:lifecycle-viewmodel-ktx",
+    version.ref = "androidx-lifecycle"
+}
+lifecycle-viewmodel-compose = { 
+    module = "androidx.lifecycle:lifecycle-viewmodel-compose",
+    version.ref = "androidx-lifecycle"
+}
 
 [bundles]
 lifecycle = ["lifecycle-viewmodel-ktx", "lifecycle-viewmodel-compose"]
@@ -346,7 +391,10 @@ pluginsセクションは、プラグインを定義するセクションです�
 
 //list[VersionCatalog21][libs.versions.toml][toml]{
 [plugins]
-android-application = { id = "com.android.application", version = "8.0.1" }
+android-application = { 
+    id = "com.android.application",
+    version = "8.0.1"
+}
 //}
 
 //list[VersionCatalog22][libs.versions.toml][groovy]{
@@ -361,15 +409,15 @@ Android Studio GiraffeからTOMLファイルで定義した依存関係が古い
 しかし、プロジェクトの依存関係更新を自動化するツールを導入するとより効率的に対応できます。
 今回は、Version Catalogに対応しているRenovate@<fn>{renovate}の導入について紹介します。@<fn>{dependabot}
 
-//footnote[renovate][https://www.mend.io/renovate/]
-//footnote[dependabot][そのほか、Version Catalogに対応している依存関係更新自動化ツールにDependabotがあります。https://github.blog/changelog/2023-03-13-dependabot-version-updates-keeps-gradle-version-catalogs-up-to-date/]
+//footnote[renovate][@<href>{https://www.mend.io/renovate/}]
+//footnote[dependabot][そのほか、Version Catalogに対応している依存関係更新自動化ツールにDependabotがあります。@<href>{https://github.blog/changelog/2023-03-13-dependabot-version-updates-keeps-gradle-version-catalogs-up-to-date/}]
 
 === Renovateの導入
 
 GitHubを利用している場合は、用意されているRenovateのGitHub Appをインストール@<fn>{renovate-install}します。
 @<code>{renovate.json}ファイルを追加するプルリクエストが自動で作成されるので、そのプルリクエストをマージすればRenovateが有効になります。
 
-//footnote[renovate-install][そのほかの導入方法は公式を参照してください。https://www.mend.io/renovate/]
+//footnote[renovate-install][そのほかの導入方法は公式を参照してください。@<href>{https://www.mend.io/renovate/}]
 
 //image[image2][RenovateのGitHub App]{
 //}
@@ -389,8 +437,8 @@ Renovateは更新できるバージョンがある場合にプルリクエスト
 その際は@<code>{schedule}項目でプルリクエストの作成タイミングを設定してあげるとよいでしょう。
 たとえば、月曜日の10:00~17:00の間のみに限定できます。
 
-//footnote[renovate-setup-options][Renovateの詳細な設定項目は公式を参照してください。https://docs.renovatebot.com/configuration-options/]
-//footnote[renovate-setup-schedule][https://docs.renovatebot.com/configuration-options/#schedule]
+//footnote[renovate-setup-options][Renovateの詳細な設定項目は公式を参照してください。@<href>{https://docs.renovatebot.com/configuration-options/}]
+//footnote[renovate-setup-schedule][@<href>{https://docs.renovatebot.com/configuration-options/#schedule}]
 
 //list[VersionCatalog23][renovate.json][json]{
 {

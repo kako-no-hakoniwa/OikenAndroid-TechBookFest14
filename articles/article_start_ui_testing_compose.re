@@ -260,7 +260,7 @@ Counter()コンポーザブルはアクティビティが再生成された場�
 //list[stateRestorationTester][stateRestorationTester.kt]{
 @get:Rule
 val composeTestRule = createComposeRule()
-    
+
 @Test
 fun `状態の復元をチェックするテスト`() {
     val restorationTester = StateRestorationTester(composeTestRule)
