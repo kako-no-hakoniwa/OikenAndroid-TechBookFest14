@@ -57,7 +57,7 @@ Android Studio GiraffeからTOMLベースのVersion Catalogがサポートされ
 Android Studio Flamingoでは表示されていたVersion Catalog未対応のWarning表示が、Android Studio Giraffeでは無くなっているのがわかりますね。
 個人的には、カタログに定義されている古いバージョンに更新可能なバージョンがサジェストされるようになったこと、コード補完がより充実するようになったことの2点が非常に便利だと感じます。
 
-//image[image6][Android Studio FlamingoとAndroid Studio GiraffeでのVersion Catalog未対応表示の有無]{
+//image[image6][Version Catalog未対応表示の有無]{
 //}
 
 ==== カタログに定義されている古いバージョンには更新可能なバージョンをサジェスト
