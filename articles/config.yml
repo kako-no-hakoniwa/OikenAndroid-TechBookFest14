@@ -17,15 +17,15 @@ review_version: 5.5
 # inherit: ["A.yml", "B.yml"]
 
 # ブック名(ファイル名になるもの。ASCII範囲の文字を使用)
-bookname: おいけんAndroidBook
+bookname: おいしい健康 Android Tech Book
 # 記述言語。省略した場合はja
 language: ja
 
 # 書名
-booktitle: {name: "おいけんAndroidBook", file-as: "オイケンAndroidBook"}
+booktitle: {name: "おいしい健康 Android Tech Book", file-as: "オイシイケンコウアンドロイドテックブック"}
 
 # 著者名。「, 」で区切って複数指定できる
-aut: [{name: "おいけんアンドロイドへんしゅうぶ", file-as: "オイケンアンドロイドヘンシュウブ"}]
+aut: [{name: "おいけんアンドロイド編集部", file-as: "オイケンアンドロイドヘンシュウブ"}]
 
 # 以下はオプション
 # 以下はオプション(autと同じように配列書式で複数指定可能)。
@@ -79,7 +79,7 @@ date: 2023-05-20
 history: [["2023-05-20 技術書典14版 v1.0.0"]]
 # 権利表記(配列で複数指定可)
 # rights: (C) 2016 Re:VIEW Developers
-rights: (C) 2023 おいけんアンドロイドへんしゅうぶ
+rights: (C) 2023 おいけんアンドロイド編集部
 # description: 説明
 # subject: 短い説明用タグ(配列で複数指定可)
 # type: 書籍のカテゴリーなど(配列で複数指定可)
