@@ -51,6 +51,41 @@ dependencies {
 }
 //}
 
+===[column] Version Catalogに対応したAndroid Studio Giraffe
+
+Android Studio GiraffeからTOMLベースのVersion Catalogがサポートされるようになりました。@<fn>{android-studio}
+Android Studio Flamingoでは表示されていたVersion Catalog未対応のWarning表示が、Android Studio Giraffeでは無くなっているのがわかりますね。
+個人的には、カタログに定義されている古いバージョンに更新可能なバージョンがサジェストされるようになったこと、コード補完がより充実するようになったことの2点が非常に便利だと感じます。
+
+//image[image6][Android Studio FlamingoとAndroid Studio GiraffeでのVersion Catalog未対応表示の有無]{
+//}
+
+==== カタログに定義されている古いバージョンには更新可能なバージョンをサジェスト
+
+build.gradleでのベタ書きやextブロックでの定義などと同様に、定義されているバージョンが古い場合に警告表示されるようになったため視認しやすくなりました。
+また、カーソルを合わせると更新可能なバージョンがサジェストされるようになっています。
+
+//image[image7_flamingo][Android Studio Flamingo（サジェストなし）]{
+//}
+
+//image[image7_giraffe][Android Studio Giraffe（サジェストあり）]{
+//}
+
+==== コード補完がより充実に
+
+Android Studio Flamingoでも最低限の補完が効きました。
+しかし、Android Studio Giraffeではコード補完がより充実し利用しやすくなりました。
+
+//image[image8_flamingo][Android Studio Flamingo]{
+//}
+
+//image[image8_giraffe][Android Studio Giraffe]{
+//}
+
+===[/column]
+
+//footnote[android-studio][https://developer.android.com/studio/preview/features#gradle-version-catalogs]
+
 == Version Catalogを導入する
 
 === どこで定義するか
