@@ -18,7 +18,7 @@ Jetpack composeで実装されたUIをテストする場合、UIテストを実�
 androidTestImplementation("androidx.compose.ui:ui-test-junit4:1.4.0")
 //}
 
-JUnit 4（テストフレームワーク）にComposeを統合します。このモジュールにはテストで利用するComposeTestRuleとComposeContentTestRulegが含まれています。
+JUnit 4（テストフレームワーク）@<bib>{junit4}にComposeを統合します。このモジュールにはテストで利用するComposeTestRuleとComposeContentTestRulegが含まれています。
 
 === UI階層（Node）からComposeを選択する
 
@@ -135,7 +135,7 @@ composeTestRule
 
 ここまでJetpack ComposeでUIテストを実行するための基本操作を紹介してきました。この節はJetpack ComposeがどのようにUI階層を理解するのか紹介していきます。
 
-Jetpack Composeのセマンティクスツリーは、テストフレームワーク以外にユーザー補助サービスからの認識に利用されます。
+Jetpack Composeのセマンティクスツリー@<bib>{compose-ui-semantics}は、テストフレームワーク以外にユーザー補助サービスからの認識に利用されます。
 
 セマンティクスツリーという時、2つのツリーをことを指します。子孫ノードをマージされたセマンティクスツリーとマージを適応せずすべてのノードをそのままにするマージされていないセマンティクスツリーがあります。
 
@@ -356,7 +356,7 @@ jobs:
 
 === Firebase Test Lab を利用したUIテスト自動化
 
-多種多様なデバイスや構成でテストを行いたい場合にFirebase Test Labを用いると便利です。
+多種多様なデバイスや構成でテストを行いたい場合にFirebase Test Lab@<bib>{test_lab}を用いると便利です。
 Firebase Test Labの利用はConsole上でも行えますが、gcloud CLIによりローカルPCやCIサービス上でも利用できます。
 
 Firebase Test Labする前にテスト対象アプリとテスト実行アプリをビルドする必要があります。(@<list>{buildApk})

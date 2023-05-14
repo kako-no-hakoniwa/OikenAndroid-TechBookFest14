@@ -1,7 +1,21 @@
 = 参考文献
 
+== Composeで始めるUIテスト
+
 //bibpaper[compose-ui-test][Android Developers Compose レイアウトのテスト]{
 https://developer.android.com/jetpack/compose/testing?hl=ja
+//}
+
+//bibpaper[junit4][JUnit4]{
+https://junit.org/junit4/
+//}
+
+//bibpaper[compose-ui-semantics][Compose のセマンティクス]{
+https://developer.android.com/jetpack/compose/semantics?hl=ja
+//}
+
+//bibpaper[test_lab][Firebase Test Lab]{
+https://firebase.google.com/docs/test-lab?hl=ja
 //}
 
 == Version Catalogを使って依存関係を一元管理する
