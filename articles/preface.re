@@ -17,3 +17,13 @@
 
 
 本書に記載された内容は、執筆時点のものです。現在の状況と異なる場合がありますので、ご了承ください。
+
+== 商標
+
+本書に登場するシステム名や製品名は、関係各社の商標または登録商標です。本書では、™、©、®マークを省略しています。
+
+Android ロボット@<fn>{androidロボット}は、Google が作成および提供している作品から複製または変更したものであり、クリエイティブ・コモンズ表示 3.0 ライセンス@<fn>{cc3}に記載された条件に従って使用しています。
+
+
+//footnote[androidロボット][@<href>{https://developer.android.com/distribute/marketing-tools/brand-guidelines?hl=ja#android_robot}]
+//footnote[cc3][@<href>{https://creativecommons.org/licenses/by/3.0/}]
