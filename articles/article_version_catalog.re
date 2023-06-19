@@ -479,7 +479,9 @@ Renovateは更新できるバージョンがある場合にプルリクエスト
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
-    "confi: "Asia/Tokyo",です。
+    "config:base"
+  ],
+  "timezone": "Asia/Tokyo",
   "schedule": ["after 10am and before 5pm on monday"]
 }
 //}
